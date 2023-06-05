@@ -1,12 +1,10 @@
-﻿using Infrastructure.DB;
+﻿using Application.Contracts;
+using Infrastructure.DB;
+using Infrastructure.Services.ShoppingCartItemItemServices;
+using Infrastructure.Services.ShoppingCartServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure
 {
@@ -17,7 +15,8 @@ namespace Infrastructure
             var defaultConnectionString = configuration.GetConnectionString("Shopdb");
             services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(defaultConnectionString));
-
+            services.AddScoped<IShoppingCartItemServices, ShoppingCartItemServices>();
+            services.AddScoped<IShoppingCartServices, ShoppingCartServices>();
 
             return services;
         }

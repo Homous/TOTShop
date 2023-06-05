@@ -1,13 +1,13 @@
-﻿using Domain.Entities;
+﻿using Application.Dtos.ShoppingCartItemDto;
 
 namespace Application.Contracts
 {
     public interface IShoppingCartItemServices
     {
-        public List<ShoppingCartItem> GetShoppingCartItems();
-        public void AddShoppingCartItem(ShoppingCartItem shoppingCartItem);
-        public void RemoveShoppingCartItem(int shoppingCartItemId);
-        public void RemoveShoppingCartItem(string shoppingCartItemId);
-        public ShoppingCartItem GetShoppingCartItem(int shoppingCartItemId);
+        public List<ShoppingCartItemDto> GetShoppingCartItems();
+        public int AddShoppingCartItem(ShoppingCartItemDto shoppingCartItem);
+        public void DeleteShoppingCartItem(int shoppingCartItemId);
+        public ShoppingCartItemDto GetShoppingCartItem(int id);
+        public void EditShoppingCartItem(int id, ShoppingCartItemDto shoppingCartItemDto);
     }
 }
