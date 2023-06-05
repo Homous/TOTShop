@@ -8,7 +8,7 @@ namespace Domain.Entities
 {
     public class ShoppingCart : BaseEntity
     {
-        public Decimal TotalCost { get; set; }
+        public decimal TotalCost { get; set; }
         public ICollection<Product> Products { get; set; }
     }
 }
