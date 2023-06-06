@@ -44,7 +44,7 @@ namespace UI.Controllers
             return Ok($"Cart deleted successfully");
         }
 
-        [HttpPost("UpdateShoppingCartItem")]
+        [HttpPost("UpdateShoppingCart")]
         public ActionResult UpdateShoppingCart(EditShoppingCartItemDto item)
         {
             _shoppingCartServices.EditShoppingCart(item);
