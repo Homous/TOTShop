@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+=======
+﻿using System.ComponentModel.DataAnnotations;
+>>>>>>> d6bf1f76514bc81807ba995fe76ffcb2a6794a8d
 
 namespace Domain.Entities
 {
