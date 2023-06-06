@@ -9,7 +9,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 
 //builder.Services.AddControllers();
-builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
