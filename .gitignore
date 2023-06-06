@@ -369,3 +369,4 @@ FodyWeavers.xsd
 /Infrastructure/Migrations/20230605112835_initial.Designer.cs
 /Infrastructure/DependencyInjection.cs
 /Infrastructure/DB/ApplicationDbContext.cs
+/Application/Dtos/ProductDtos/UpdateProductDto.cs
