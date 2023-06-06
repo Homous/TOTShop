@@ -10,6 +10,7 @@ namespace Application.Mapping
         {
             CreateMap<ShoppingCart, ShoppingCartDto>();
             CreateMap<ShoppingCart, DetailedShoppingCartDto>();
+            CreateMap<List<ShoppingCartDto>, List<ShoppingCartDto>>();
         }
     }
 }
