@@ -1,5 +1,6 @@
 ﻿using Application.Contracts;
-using Application.Dtos.ShoppingCartDto;
+using Application.Dtos.ShoppingCart;
+using Application.Dtos.ShoppingCartItem;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.DB;
@@ -10,19 +11,36 @@ namespace Infrastructure.Services.ShoppingCartServices
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IShoppingCartItemServices _shoppingCartItemServices;
 
-        public ShoppingCartServices(ApplicationDbContext context, IMapper mapper)
+        public ShoppingCartServices(ApplicationDbContext context, IMapper mapper, IShoppingCartItemServices shoppingCartItemServices)
         {
             _context = context;
             _mapper = mapper;
+            _shoppingCartItemServices = shoppingCartItemServices;
         }
-        public void AddShoppingCart(ShoppingCartDto item)
+        public int AddShoppingCart(ShoppingCartDto item)
         {
             var cart = _mapper.Map<ShoppingCart>(item);
+
             _context.ShoppingCarts.Add(cart);
             _context.SaveChanges();
+
+            return cart.Id;
         }
 
+        /* public int AddShoppingCartWithItems(ShoppingCartDto item)
+         {
+             var cart = _mapper.Map<ShoppingCart>(item);
+             if(cart != null)
+             {
+                 _context.ShoppingCarts.Add(cart);
+                 _context.SaveChanges();
+             }
+
+             return cart.Id;
+         }
+ */
         public void DeleteShoppingCart(int id)
         {
             var cart = _context.ShoppingCarts.Find(id);
@@ -30,7 +48,8 @@ namespace Infrastructure.Services.ShoppingCartServices
             _context.SaveChanges();
         }
 
-        public void EditShoppingCart(int id, ShoppingCartDto shoppingCartDto)
+
+        public void EditShoppingCart(EditShoppingCartItemDto shoppingCartDto)
         {
             var cart = _mapper.Map<ShoppingCart>(shoppingCartDto);
             if (cart != null)
@@ -41,16 +60,16 @@ namespace Infrastructure.Services.ShoppingCartServices
 
         }
 
-        public ShoppingCartDto GetShoppingCart(int id)
+        public DetailedShoppingCartDto GetShoppingCart(int id)
         {
-            var cart = _context.ShoppingCarts.FirstOrDefault(x => x.Id == id);
-            return _mapper.Map<ShoppingCartDto>(cart);
+            return _mapper.ProjectTo<DetailedShoppingCartDto>(_context.ShoppingCarts).FirstOrDefault(x => x.Id == id);
+            //var cart = _context.ShoppingCarts.FirstOrDefault(x => x.Id == id);
+            //return _mapper.Map<ShoppingCartDto>(cart);
         }
 
-        public List<ShoppingCartDto> GetShoppingCarts()
+        public List<DetailedShoppingCartDto> GetShoppingCarts()
         {
-            var carts = _context.ShoppingCarts.ToList();
-            return _mapper.Map<List<ShoppingCartDto>>(carts);
+            return _mapper.ProjectTo<DetailedShoppingCartDto>(_context.ShoppingCarts).ToList();
         }
 
     }

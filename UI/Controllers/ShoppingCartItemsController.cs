@@ -1,8 +1,8 @@
 ﻿using Application.Contracts;
-using Application.Dtos.ShoppingCartItemDto;
+using Application.Dtos.ShoppingCartItem;
 using Microsoft.AspNetCore.Mvc;
 
-namespace UI.Controllers.ShoppingCartItem
+namespace UI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,10 +14,17 @@ namespace UI.Controllers.ShoppingCartItem
         {
             _shoppingCartItemServices = shoppingCartItemServices;
         }
+
         [HttpGet(Name = "GetShoppingCartItems")]
-        public IEnumerable<ShoppingCartItemDto> Get()
+        public IEnumerable<DetailedShoppingCartItemDto> Get()
         {
             return _shoppingCartItemServices.GetShoppingCartItems();
+        }
+
+        [HttpGet("{id}")]
+        public DetailedShoppingCartItemDto GetItem(int id)
+        {
+            return _shoppingCartItemServices.GetShoppingCartItem(id);
         }
 
         [HttpPost("AddShoppingCartItem")]
@@ -29,6 +36,21 @@ namespace UI.Controllers.ShoppingCartItem
         }
 
 
+        [HttpDelete("DeleteShoppingCartItem")]
+        public ActionResult Delete(int id)
+        {
+            _shoppingCartItemServices.DeleteShoppingCartItem(id);
+
+            return Ok($"Item deleted successfully");
+        }
+
+        [HttpPost("UpdateShoppingCartItem")]
+        public ActionResult UpdateShoppingCartItem(UpdateShoppingCartItemDto item)
+        {
+            _shoppingCartItemServices.EditShoppingCartItem(item);
+
+            return Ok($"Item updated successfully");
+        }
 
     }
 }

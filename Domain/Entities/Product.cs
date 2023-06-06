@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Domain.Entities
 {
@@ -22,7 +17,7 @@ namespace Domain.Entities
         [Required]
         [MaxLength(255)]
         public string ImageUrl { get; set; }
-        public ICollection<ShoppingCart> ShoppingCarts { get; set; }
+        //public ICollection<ShoppingCart> ShoppingCarts { get; set; }
         public ICollection<ShoppingCartItem> ShoppingCartItems { get; set; }
     }
 }

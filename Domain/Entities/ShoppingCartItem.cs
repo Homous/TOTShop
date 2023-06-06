@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     public class ShoppingCartItem : BaseEntity
     {
@@ -12,5 +6,8 @@ namespace Domain.Entities
         public int Count { get; set; }
         public int ProductId { get; set; }
         public Product Product { get; set; }
+
+        public int ShoppingCartId { get; set; }
+        public ShoppingCart ShoppingCart { get; set; }
     }
 }
