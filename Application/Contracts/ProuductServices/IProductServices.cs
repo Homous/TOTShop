@@ -11,8 +11,8 @@ namespace Application.Contracts.ProuductServices
     {
         List<MiniProductDto> miniDetailsProducts();
         DetailedProductDto GetProductById(int id);
-        List<MiniProductDto> GetProductByName(string name);
-        void UpdateProduct(AddProductDto updateProductDto);
+        List<MiniProductDto> Search(string search);
+        void UpdateProduct(UpdateProductDto updateProductDto);
         void DeleteProduct(int id);
         void AddProduct(AddProductDto addProductDto);
     }

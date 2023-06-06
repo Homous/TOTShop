@@ -1,12 +1,15 @@
 ﻿using Application.Contracts.ProuductServices;
 using Application.Dtos.ProductDtos;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Domain.Entities;
 using Infrastructure.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace Infrastructure.Services.ProductServices
 {
@@ -20,39 +23,57 @@ namespace Infrastructure.Services.ProductServices
             this.db = db;
             this.mapper = mapper;
         }
-        public void AddProduct(AddProductDto addProductDto)
+        public void AddProduct( AddProductDto addProductDto)
         {
-            throw new NotImplementedException();
+            if(addProductDto != null)
+            {
+                var getWithMap = mapper.Map<Product>(addProductDto);
+                db.Products.Add(getWithMap);
+                db.SaveChanges();
+            }
         }
 
         public void DeleteProduct(int id)
         {
-            throw new NotImplementedException();
+            var getById = db.Products.FirstOrDefault(x => x.Id == id);
+            if (getById != null)
+            {
+                db.Products.Remove(getById);
+                db.SaveChanges();
+            }
         }
 
         public DetailedProductDto GetProductById(int id)
         {
-            throw new NotImplementedException();
+            var getById = db.Products.Find(id);
+            var getMap = mapper.Map<DetailedProductDto>(getById);
+                return getMap;
         }
 
-        public List<MiniProductDto> GetProductByName(string name)
+        public List<MiniProductDto> Search(string search)
         {
-            var filter = db.Products.Where(n => n.Name.Contains(name));
+            var filter = db.Products.Where(n => n.Name.Contains(search) || n.Description.Contains(search)).ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
             var getList = filter.ToList();
-            var getWithMap = mapper.Map<List<MiniProductDto>>(getList);
-            return getWithMap;
+           
+            return getList;
         }
 
         public List<MiniProductDto> miniDetailsProducts()
         {
-            var getMiniPro =  db.Products.ToList();
-            var getWithMap = mapper.Map<List<MiniProductDto>>(getMiniPro);
-            return getWithMap;
+            var getMiniPro = db.Products.ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
+            var getList = getMiniPro.ToList();
+            
+            return getList;
         }
 
-        public void UpdateProduct(AddProductDto updateProductDto)
+        public void UpdateProduct( UpdateProductDto updateProductDto)
         {
-            throw new NotImplementedException();
+            if (updateProductDto != null)
+            {
+                var get = mapper.Map<Product>(updateProductDto);
+                db.Products.Update(get);
+                db.SaveChanges();
+            }
         }
     }
 }
