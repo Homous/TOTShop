@@ -1,13 +1,14 @@
-﻿using Application.Dtos.ShoppingCartDto;
+﻿using Application.Dtos.ShoppingCart;
+using Application.Dtos.ShoppingCartItem;
 
 namespace Application.Contracts
 {
     public interface IShoppingCartServices
     {
-        public List<ShoppingCartDto> GetShoppingCarts();
-        public ShoppingCartDto GetShoppingCart(int id);
-        public void AddShoppingCart(ShoppingCartDto item);
+        public List<DetailedShoppingCartDto> GetShoppingCarts();
+        public DetailedShoppingCartDto GetShoppingCart(int id);
+        public int AddShoppingCart(ShoppingCartDto item);
         public void DeleteShoppingCart(int id);
-        public void EditShoppingCart(int id, ShoppingCartDto shoppingCartDto);
+        public void EditShoppingCart(EditShoppingCartItemDto shoppingCartDto);
     }
 }

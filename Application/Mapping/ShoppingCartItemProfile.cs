@@ -1,4 +1,4 @@
-﻿using Application.Dtos.ShoppingCartItemDto;
+﻿using Application.Dtos.ShoppingCartItem;
 using AutoMapper;
 using Domain.Entities;
 
@@ -8,10 +8,9 @@ namespace Application.Mapping
     {
         public ShoppingCartItemProfile()
         {
-            CreateMap<ShoppingCartItem, ShoppingCartItemDto>();
-            CreateMap<ShoppingCartItem, DetailedShoppingCartItemDto>();
-            CreateMap<ShoppingCartItemDto, ShoppingCartItemDto>();
-
+            CreateMap<ShoppingCartItem, ShoppingCartItemDto>().ReverseMap();
+            CreateMap<ShoppingCartItem, DetailedShoppingCartItemDto>().ReverseMap();
+            CreateMap<ShoppingCartItem, UpdateShoppingCartItemDto>().ReverseMap();
         }
     }
 }

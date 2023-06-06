@@ -1,5 +1,5 @@
 ﻿using Application.Contracts;
-using Application.Dtos.ShoppingCartItemDto;
+using Application.Dtos.ShoppingCartItem;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.DB;
@@ -16,6 +16,22 @@ namespace Infrastructure.Services.ShoppingCartItemItemServices
             _context = context;
             _mapper = mapper;
         }
+
+        public bool AddListShoppingCartItems(int shoppingCartId, List<ShoppingCartItemDto> items)
+        {
+            var cart = _context.ShoppingCarts.Find(shoppingCartId);
+            if (cart != null)
+            {
+                var shoppingCartitems = _mapper.Map<List<ShoppingCartItem>>(items).ToList();
+                shoppingCartitems.ForEach(item => item.ShoppingCartId = shoppingCartId);
+
+                _context.ShoppingCartItems.AddRange(shoppingCartitems);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
         public int AddShoppingCartItem(ShoppingCartItemDto item)
         {
             var CartItem = _mapper.Map<ShoppingCartItem>(item);
@@ -32,7 +48,7 @@ namespace Infrastructure.Services.ShoppingCartItemItemServices
             _context.SaveChanges();
         }
 
-        public void EditShoppingCartItem(int id, ShoppingCartItemDto shoppingCartItemDto)
+        public void EditShoppingCartItem(UpdateShoppingCartItemDto shoppingCartItemDto)
         {
             var CartItem = _mapper.Map<ShoppingCartItem>(shoppingCartItemDto);
             if (CartItem != null)
@@ -42,15 +58,18 @@ namespace Infrastructure.Services.ShoppingCartItemItemServices
             }
 
         }
-        public ShoppingCartItemDto GetShoppingCartItem(int id)
+        public DetailedShoppingCartItemDto GetShoppingCartItem(int id)
         {
-            var cart = _context.ShoppingCartItems.FirstOrDefault(x => x.Id == id);
-            return _mapper.Map<ShoppingCartItemDto>(cart);
+            return _mapper.ProjectTo<DetailedShoppingCartItemDto>(_context.ShoppingCartItems).FirstOrDefault(x => x.Id == id);
+            //var cart = _context.ShoppingCartItems.FirstOrDefault(x => x.Id == id);
+            //return _mapper.Map<ShoppingCartItemDto>(cart);
         }
-        public List<ShoppingCartItemDto> GetShoppingCartItems()
+        public List<DetailedShoppingCartItemDto> GetShoppingCartItems()
         {
-            var CartItems = _context.ShoppingCartItems.ToList();
-            return _mapper.Map<List<ShoppingCartItemDto>>(CartItems);
+            // var CartItems = _context.ShoppingCartItems.ToList();
+            // return _mapper.Map<List<ShoppingCartItemDto>>(CartItems);
+
+            return _mapper.ProjectTo<DetailedShoppingCartItemDto>(_context.ShoppingCartItems).ToList();
         }
 
     }
