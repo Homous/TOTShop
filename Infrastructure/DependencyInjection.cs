@@ -1,5 +1,7 @@
 ﻿using Application.Contracts;
+using Application.Contracts.ProuductServices;
 using Infrastructure.DB;
+using Infrastructure.Services.ProductServices;
 using Infrastructure.Services.ShoppingCartItemItemServices;
 using Infrastructure.Services.ShoppingCartServices;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +19,7 @@ namespace Infrastructure
                options.UseSqlServer(defaultConnectionString));
             services.AddScoped<IShoppingCartItemServices, ShoppingCartItemServices>();
             services.AddScoped<IShoppingCartServices, ShoppingCartServices>();
+            services.AddScoped<IProductServices, ProductServices>();
 
             return services;
         }

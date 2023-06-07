@@ -35,15 +35,18 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -67,15 +70,10 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("AddedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("TotalCost")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("ShoppingCarts");
                 });
@@ -112,13 +110,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("ShoppingCartItems");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ShoppingCart", b =>
-                {
-                    b.HasOne("Domain.Entities.Product", null)
-                        .WithMany("ShoppingCarts")
-                        .HasForeignKey("ProductId");
-                });
-
             modelBuilder.Entity("Domain.Entities.ShoppingCartItem", b =>
                 {
                     b.HasOne("Domain.Entities.Product", "Product")
@@ -141,8 +132,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Product", b =>
                 {
                     b.Navigation("ShoppingCartItems");
-
-                    b.Navigation("ShoppingCarts");
                 });
 
             modelBuilder.Entity("Domain.Entities.ShoppingCart", b =>

@@ -3,6 +3,7 @@ using Application.Dtos.ShoppingCart;
 using Application.Dtos.ShoppingCartItem;
 using Microsoft.AspNetCore.Mvc;
 
+//
 namespace UI.Controllers
 {
     [Route("api/[controller]")]
@@ -44,7 +45,7 @@ namespace UI.Controllers
             return Ok($"Cart deleted successfully");
         }
 
-        [HttpPost("UpdateShoppingCartItem")]
+        [HttpPost("UpdateShoppingCart")]
         public ActionResult UpdateShoppingCart(EditShoppingCartItemDto item)
         {
             _shoppingCartServices.EditShoppingCart(item);
