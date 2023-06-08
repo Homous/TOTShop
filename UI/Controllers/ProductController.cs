@@ -17,16 +17,16 @@ namespace UI.Controllers
         {
             this.productServices = productServices;
         }
-        [HttpGet("MiniProduct")]
+        [HttpGet]
         public IActionResult MiniDetailsProducts()
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            return Ok(productServices.miniDetailsProducts());
+            return Ok(productServices.MiniDetailsProducts());
         }
-        [HttpGet("ProudactById/{id:int}")]
+        [HttpGet("{id:int}")]
         public IActionResult ProudactById( int id)
         {
             try 
@@ -40,7 +40,7 @@ namespace UI.Controllers
             }
 
         }
-        [HttpGet("Search/{search}")]
+        [HttpGet("{sreach}")]
         public IActionResult Search( string search)
         {
             try
@@ -52,7 +52,7 @@ namespace UI.Controllers
                 return NotFound();
             }
         }
-        [HttpPost("AddProduct")]
+        [HttpPost]
         public IActionResult AddProduct([FromBody] AddProductDto addProduct)
         {
             try
@@ -65,7 +65,7 @@ namespace UI.Controllers
                 return BadRequest();
             }
         }
-        [HttpPut("UpdateProduct")]
+        [HttpPut]
         public IActionResult UpdateProduct( UpdateProductDto updateProductDto)
         {
             try
@@ -78,7 +78,7 @@ namespace UI.Controllers
                 return BadRequest();
             }
         }
-        [HttpDelete("DeleteProduct")]
+        [HttpDelete]
         public IActionResult DeleteProduct([FromQuery] int id)
         {
             try

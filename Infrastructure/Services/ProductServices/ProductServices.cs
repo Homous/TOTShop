@@ -33,14 +33,16 @@ namespace Infrastructure.Services.ProductServices
             }
         }
 
-        public void DeleteProduct(int id)
+        public bool DeleteProduct(int id)
         {
             var getById = db.Products.FirstOrDefault(x => x.Id == id);
             if (getById != null)
             {
                 db.Products.Remove(getById);
                 db.SaveChanges();
+                return true;
             }
+            return false;
         }
 
         public DetailedProductDto GetProductById(int id)
@@ -58,7 +60,7 @@ namespace Infrastructure.Services.ProductServices
             return getList;
         }
 
-        public List<MiniProductDto> miniDetailsProducts()
+        public List<MiniProductDto> MiniDetailsProducts()
         {
             var getMiniPro = db.Products.ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
             var getList = getMiniPro.ToList();
