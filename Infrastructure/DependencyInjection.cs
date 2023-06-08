@@ -14,7 +14,7 @@ namespace Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            var defaultConnectionString = configuration.GetConnectionString("Shopdb");
+            var defaultConnectionString = configuration.GetConnectionString("ToTShop");
             services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(defaultConnectionString));
             services.AddScoped<IShoppingCartItemServices, ShoppingCartItemServices>();
