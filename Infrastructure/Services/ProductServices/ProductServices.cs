@@ -27,29 +27,30 @@ namespace Infrastructure.Services.ProductServices
         {
             if(addProductDto != null)
             {
-                var getWithMap = mapper.Map<Product>(addProductDto);
-                db.Products.Add(getWithMap);
+                var map = mapper.Map<Product>(addProductDto);
+                db.Products.Add(map);
                 db.SaveChanges();
             }
         }
 
         public bool DeleteProduct(int id)
         {
-            var getById = db.Products.FirstOrDefault(x => x.Id == id);
-            if (getById != null)
+            var getProduct = db.Products.FirstOrDefault(x => x.Id == id);
+            if (getProduct != null)
             {
-                db.Products.Remove(getById);
+                db.Products.Remove(getProduct);
                 db.SaveChanges();
                 return true;
             }
+            
             return false;
         }
 
         public DetailedProductDto GetProductById(int id)
         {
-            var getById = db.Products.Find(id);
-            var getMap = mapper.Map<DetailedProductDto>(getById);
-                return getMap;
+            var getProduct = db.Products.Find(id);
+            var map = mapper.Map<DetailedProductDto>(getProduct);
+                return map;
         }
 
         public List<MiniProductDto> Search(string search)
@@ -62,18 +63,17 @@ namespace Infrastructure.Services.ProductServices
 
         public List<MiniProductDto> MiniDetailsProducts()
         {
-            var getMiniPro = db.Products.ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
-            var getList = getMiniPro.ToList();
-            
-            return getList;
+                var getMiniPro = db.Products.ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
+                var getList = getMiniPro.ToList();
+                return getList;
         }
 
         public void UpdateProduct( UpdateProductDto updateProductDto)
         {
             if (updateProductDto != null)
             {
-                var get = mapper.Map<Product>(updateProductDto);
-                db.Products.Update(get);
+                var map = mapper.Map<Product>(updateProductDto);
+                db.Products.Update(map);
                 db.SaveChanges();
             }
         }

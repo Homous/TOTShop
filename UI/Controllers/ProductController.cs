@@ -1,14 +1,18 @@
 ﻿using Application.Contracts.ProuductServices;
 using Application.Dtos.ProductDtos;
+using Application.Mapping;
+using Application.Validations;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.TeamFoundation.Test.WebApi;
 using System.IO.Pipes;
 
 namespace UI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class ProductController : ControllerBase
     {
         private readonly IProductServices productServices;
@@ -18,77 +22,147 @@ namespace UI.Controllers
             this.productServices = productServices;
         }
         [HttpGet]
+        [ServiceFilter(typeof(ModelValidation))]
         public IActionResult MiniDetailsProducts()
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            return Ok(productServices.MiniDetailsProducts());
+            try
+            {
+                var products = productServices.MiniDetailsProducts();
+                return Ok(new
+                {
+                    Message = "Products returned",
+                    IsDone = true
+                });
+            }
+            catch
+            {
+                return BadRequest(new
+                {
+                    Message = "Error",
+                    IsDone = false,
+                    ProductPage = 0
+                });
+            }
         }
         [HttpGet("{id:int}")]
+        [ServiceFilter(typeof(ModelValidation))]
         public IActionResult ProudactById( int id)
         {
             try 
             { 
-                return Ok(productServices.GetProductById(id));
+                var product = productServices.GetProductById(id);
+                return Ok(new
+                {
+                    Message = "Product returned",
+                    IsDone = true,
+                    Product = product
+                });
             }
 
-            catch(Exception ex)
+            catch
             {
-                return NotFound(ex.Message);
+                return NotFound(new
+                {
+                    Message = "Product not founded",
+                    IsDone = false,
+                    ProductPage = 0
+                });
             }
 
         }
-        [HttpGet("{sreach}")]
-        public IActionResult Search( string search)
+        [HttpGet("{search}")]
+        [ServiceFilter(typeof(ModelValidation))]
+        public IActionResult Search(string search)
         {
             try
             {
-                return Ok(productServices.Search(search));
+                productServices.Search(search);
+                return Ok(new
+                {
+                    Message = "Products returned",
+                    IsDone = true
+                });
             }
             catch 
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    Message = "Product not founded",
+                    IsDone = false,
+                    ProductPage = 0
+                });
             }
         }
         [HttpPost]
+        [ServiceFilter(typeof(ModelValidation))]
         public IActionResult AddProduct([FromBody] AddProductDto addProduct)
         {
             try
             {
                 productServices.AddProduct(addProduct);
-                return Ok("Product Was Added");
+                return Ok(new
+                {
+                    Message = "Product Was Added.",
+                    IsDone = true,
+                    Product = addProduct
+                });
             }
             catch 
             {
-                return BadRequest();
+                return BadRequest(new
+                {
+                    Message = "Error",
+                    IsDone = false
+                });
             }
         }
         [HttpPut]
+        [ServiceFilter(typeof(ModelValidation))]
         public IActionResult UpdateProduct( UpdateProductDto updateProductDto)
         {
             try
             {
                 productServices.UpdateProduct(updateProductDto);
-                return Ok("Was Updated");
+                return Ok(new
+                {
+                    Message = "Product Was Updated.",
+                    IsDone = true,
+                    Product = updateProductDto
+                });
             }
             catch 
-            { 
-                return BadRequest();
+            {
+                return BadRequest(new
+                {
+                    Message = "Error",
+                    IsDone = false
+                });
             }
         }
         [HttpDelete]
+        [ServiceFilter(typeof(ModelValidation))]
         public IActionResult DeleteProduct([FromQuery] int id)
         {
             try
             {
                 productServices.DeleteProduct(id);
-                return NoContent();
+                return Ok(new
+                {
+                    Message = "Product Was Deleted.",
+                    IsDone = true
+                });
             }
             catch 
             {
-                return BadRequest(); 
+                return BadRequest(new
+                {
+                    Message = "Error",
+                    IsDone = false
+                });
             }
         }
 
