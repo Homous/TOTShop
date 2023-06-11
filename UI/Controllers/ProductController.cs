@@ -1,18 +1,13 @@
 ﻿using Application.Contracts.ProuductServices;
 using Application.Dtos.ProductDtos;
-using Application.Mapping;
-using Application.Validations;
-using Domain.Entities;
-using Microsoft.AspNetCore.Http;
+//using Application.Validations;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.TeamFoundation.Test.WebApi;
-using System.IO.Pipes;
 
 namespace UI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    
+
     public class ProductController : ControllerBase
     {
         private readonly IProductServices productServices;
@@ -22,7 +17,7 @@ namespace UI.Controllers
             this.productServices = productServices;
         }
         [HttpGet]
-        [ServiceFilter(typeof(ModelValidation))]
+        // [ServiceFilter(typeof(ModelValidation))]
         public IActionResult MiniDetailsProducts()
         {
             if (!ModelState.IsValid)
@@ -52,8 +47,8 @@ namespace UI.Controllers
         [ServiceFilter(typeof(ModelValidation))]
         public IActionResult ProudactById(int? id)
         {
-            try 
-            { 
+            try
+            {
                 var product = productServices.GetProductById(id);
                 if(product == null)
                 {
@@ -97,7 +92,7 @@ namespace UI.Controllers
                     IsDone = true
                 });
             }
-            catch 
+            catch
             {
                 return NotFound(new
                 {
@@ -108,7 +103,7 @@ namespace UI.Controllers
             }
         }
         [HttpPost]
-        [ServiceFilter(typeof(ModelValidation))]
+        // [ServiceFilter(typeof(ModelValidation))]
         public IActionResult AddProduct([FromBody] AddProductDto addProduct)
         {
             try
@@ -121,7 +116,7 @@ namespace UI.Controllers
                     Product = addProduct
                 });
             }
-            catch 
+            catch
             {
                 return BadRequest(new
                 {
@@ -131,8 +126,8 @@ namespace UI.Controllers
             }
         }
         [HttpPut]
-        [ServiceFilter(typeof(ModelValidation))]
-        public IActionResult UpdateProduct( UpdateProductDto updateProductDto)
+        // [ServiceFilter(typeof(ModelValidation))]
+        public IActionResult UpdateProduct(UpdateProductDto updateProductDto)
         {
             try
             {
@@ -144,7 +139,7 @@ namespace UI.Controllers
                     Product = updateProductDto
                 });
             }
-            catch 
+            catch
             {
                 return BadRequest(new
                 {
