@@ -33,7 +33,7 @@ namespace Infrastructure.Services.ProductServices
             }
         }
 
-        public bool DeleteProduct(int id)
+        public bool DeleteProduct(int? id)
         {
             var getProduct = db.Products.FirstOrDefault(x => x.Id == id);
             if (getProduct != null)
@@ -46,25 +46,25 @@ namespace Infrastructure.Services.ProductServices
             return false;
         }
 
-        public DetailedProductDto GetProductById(int id)
+        public DetailedProductDto GetProductById(int? id)
         {
             var getProduct = db.Products.Find(id);
             var map = mapper.Map<DetailedProductDto>(getProduct);
                 return map;
         }
 
-        public List<MiniProductDto> Search(string search)
+        public List<MiniProductDto> Search(string? filter)
         {
-            var filter = db.Products.Where(n => n.Name.Contains(search) || n.Description.Contains(search)).ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
-            var getList = filter.ToList();
+            var getProducts = db.Products.Where(n => n.Name.Contains(filter) || n.Description.Contains(filter)).ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
+            var getList = getProducts.ToList();
            
             return getList;
         }
 
         public List<MiniProductDto> MiniDetailsProducts()
         {
-                var getMiniPro = db.Products.ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
-                var getList = getMiniPro.ToList();
+                var getProducts = db.Products.ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
+                var getList = getProducts.ToList();
                 return getList;
         }
 

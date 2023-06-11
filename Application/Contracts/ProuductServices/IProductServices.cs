@@ -10,10 +10,10 @@ namespace Application.Contracts.ProuductServices
     public interface IProductServices
     {
         List<MiniProductDto> MiniDetailsProducts();
-        DetailedProductDto GetProductById(int id);
-        List<MiniProductDto> Search(string search);
+        DetailedProductDto GetProductById(int? id);
+        List<MiniProductDto> Search(string? search);
         void UpdateProduct(UpdateProductDto updateProductDto);
-        bool DeleteProduct(int id);
+        bool DeleteProduct(int? id);
         void AddProduct(AddProductDto addProductDto);
     }
 }

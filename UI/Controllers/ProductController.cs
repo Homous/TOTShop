@@ -50,24 +50,34 @@ namespace UI.Controllers
         }
         [HttpGet("{id:int}")]
         [ServiceFilter(typeof(ModelValidation))]
-        public IActionResult ProudactById( int id)
+        public IActionResult ProudactById(int? id)
         {
             try 
             { 
                 var product = productServices.GetProductById(id);
+                if(product == null)
+                {
+                    return NotFound(new
+                    {
+                        Message = "Product NotFound",
+                        IsDone = true
+                    });
+                }
                 return Ok(new
                 {
                     Message = "Product returned",
                     IsDone = true,
+                    ProductPage = 1,
                     Product = product
                 });
+                
             }
 
             catch
             {
-                return NotFound(new
+                return BadRequest(new
                 {
-                    Message = "Product not founded",
+                    Message = "Error",
                     IsDone = false,
                     ProductPage = 0
                 });
@@ -76,7 +86,7 @@ namespace UI.Controllers
         }
         [HttpGet("{search}")]
         [ServiceFilter(typeof(ModelValidation))]
-        public IActionResult Search(string search)
+        public IActionResult Search( string? search)
         {
             try
             {
@@ -145,14 +155,22 @@ namespace UI.Controllers
         }
         [HttpDelete]
         [ServiceFilter(typeof(ModelValidation))]
-        public IActionResult DeleteProduct([FromQuery] int id)
+        public IActionResult DeleteProduct([FromQuery] int? id)
         {
             try
             {
-                productServices.DeleteProduct(id);
-                return Ok(new
+               var deleteProduct =  productServices.DeleteProduct(id);
+                if (deleteProduct != false)
                 {
-                    Message = "Product Was Deleted.",
+                    return Ok(new
+                    {
+                        Message = "Product Was Deleted.",
+                        IsDone = true
+                    });
+                }
+                return NotFound(new
+                {
+                    Message = "Product Not Founded.",
                     IsDone = true
                 });
             }
