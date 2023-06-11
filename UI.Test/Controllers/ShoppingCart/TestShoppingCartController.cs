@@ -7,12 +7,12 @@ using UI.Controllers;
 namespace UI.Test.Controllers.ShoppingCart
 {
 
-    public class ShoppingCartControllerTest
+    public class TestShoppingCartController
     {
         private Fixture _fixture;
         private ShoppingCartController _controller;
         private Mock<IShoppingCartServices> _shoppingCartServicesMock;
-        public ShoppingCartControllerTest()
+        public TestShoppingCartController()
         {
             _fixture = new Fixture();
             _shoppingCartServicesMock = new Mock<IShoppingCartServices>();
