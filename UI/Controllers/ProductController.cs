@@ -1,7 +1,6 @@
 ﻿using Application.Contracts.ProuductServices;
 using Application.Dtos.ProductDtos;
 using Application.Validations;
-//using Application.Validations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace UI.Controllers
@@ -17,14 +16,10 @@ namespace UI.Controllers
         {
             this.productServices = productServices;
         }
+
         [HttpGet]
-        [ServiceFilter(typeof(ModelValidation))]
         public IActionResult MiniDetailsProducts()
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
             try
             {
                 var products = productServices.MiniDetailsProducts();
@@ -44,14 +39,14 @@ namespace UI.Controllers
                 });
             }
         }
+
         [HttpGet("{id:int}")]
-        [ServiceFilter(typeof(ModelValidation))]
         public IActionResult ProudactById(int? id)
         {
             try
             {
                 var product = productServices.GetProductById(id);
-                if (product == null)
+                if(product == null)
                 {
                     return NotFound(new
                     {
@@ -66,7 +61,7 @@ namespace UI.Controllers
                     ProductPage = 1,
                     Product = product
                 });
-
+                
             }
 
             catch
@@ -80,21 +75,21 @@ namespace UI.Controllers
             }
 
         }
+
         [HttpGet("{search}")]
-        [ServiceFilter(typeof(ModelValidation))]
-        public IActionResult Search(string? search)
+        public IActionResult FilteringData(string? search)
         {
             try
             {
-                productServices.Search(search);
-                return Ok(new
+               var product = productServices.FilteringData(search);
+                if (product != null)
                 {
-                    Message = "Products returned",
-                    IsDone = true
-                });
-            }
-            catch
-            {
+                    return Ok(new
+                    {
+                        Message = "Products returned",
+                        IsDone = true
+                    });
+                }
                 return NotFound(new
                 {
                     Message = "Product not founded",
@@ -102,14 +97,24 @@ namespace UI.Controllers
                     ProductPage = 0
                 });
             }
+            catch
+            {
+                return BadRequest(new
+                {
+                    Message = "Error",
+                    IsDone = false,
+                    ProductPage = 0
+                });
+            }
         }
+
         [HttpPost]
         [ServiceFilter(typeof(ModelValidation))]
         public IActionResult AddProduct([FromBody] AddProductDto addProduct)
         {
             try
             {
-                productServices.AddProduct(addProduct);
+                 productServices.AddProduct(addProduct);
                 return Ok(new
                 {
                     Message = "Product Was Added.",
@@ -126,6 +131,7 @@ namespace UI.Controllers
                 });
             }
         }
+
         [HttpPut]
         [ServiceFilter(typeof(ModelValidation))]
         public IActionResult UpdateProduct(UpdateProductDto updateProductDto)
@@ -149,13 +155,13 @@ namespace UI.Controllers
                 });
             }
         }
+
         [HttpDelete]
-        [ServiceFilter(typeof(ModelValidation))]
         public IActionResult DeleteProduct([FromQuery] int? id)
         {
             try
             {
-                var deleteProduct = productServices.DeleteProduct(id);
+               var deleteProduct =  productServices.DeleteProduct(id);
                 if (deleteProduct != false)
                 {
                     return Ok(new
@@ -170,7 +176,7 @@ namespace UI.Controllers
                     IsDone = true
                 });
             }
-            catch
+            catch 
             {
                 return BadRequest(new
                 {

@@ -53,7 +53,7 @@ namespace Infrastructure.Services.ProductServices
                 return map;
         }
 
-        public List<MiniProductDto> Search(string? filter)
+        public List<MiniProductDto> FilteringData(string? filter)
         {
             var getProducts = db.Products.Where(n => n.Name.Contains(filter) || n.Description.Contains(filter)).ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
             var getList = getProducts.ToList();
