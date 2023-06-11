@@ -1,7 +1,7 @@
 ﻿using Application.Contracts;
 using Application.Dtos.ShoppingCart;
-using Application.Dtos.ShoppingCartItem;
 using Microsoft.AspNetCore.Mvc;
+using UI.ActionResults;
 
 //
 namespace UI.Controllers
@@ -18,39 +18,154 @@ namespace UI.Controllers
         }
 
         [HttpGet(Name = "GetShoppingCart")]
-        public IEnumerable<DetailedShoppingCartDto> Get()
+        public IActionResult Get()
         {
-            return _shoppingCartServices.GetShoppingCarts();
+            try
+            {
+                var shoppingCarts = _shoppingCartServices.GetShoppingCarts();
+                return Ok(new ActionResultModel()
+                {
+                    Message = shoppingCarts != null ? "Shopping carts returned successfully" : "No data exists",
+                    Status = true,
+                    Data = shoppingCarts
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ActionResultModel()
+                {
+                    Message = $"Error {ex.Message}",
+                    Status = false,
+                    Data = ""
+                }); ;
+            }
         }
 
         [HttpGet("{id}")]
-        public DetailedShoppingCartDto GetItem(int id)
+        public IActionResult GetItem(int id)
         {
-            return _shoppingCartServices.GetShoppingCart(id);
+            try
+            {
+                var shoppingCart = _shoppingCartServices.GetShoppingCart(id);
+                return Ok(new ActionResultModel()
+                {
+                    Message = shoppingCart != null ? "Shopping cart returned successfully" : "No data exists",
+                    Status = true,
+                    Data = shoppingCart
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ActionResultModel()
+                {
+                    Message = $"Error {ex.Message}",
+                    Status = false,
+                    Data = ""
+                });
+            }
         }
 
-        [HttpPost("AddShoppingCart")]
-        public ActionResult Add([FromBody] ShoppingCartDto item)
+        [HttpPost("Add")]
+        public IActionResult Add([FromBody] ShoppingCartDto item)
         {
-            var id = _shoppingCartServices.AddShoppingCart(item);
-
-            return Ok($"Cart created with id {id}");
+            try
+            {
+                var id = _shoppingCartServices.AddShoppingCart(item);
+                return Ok(new ActionResultModel()
+                {
+                    Message = $"Shopping cart added with Id {id}",
+                    Status = true,
+                    Data = id
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ActionResultModel()
+                {
+                    Message = $"Error {ex.Message}",
+                    Status = false,
+                    Data = ""
+                });
+            }
         }
 
-        [HttpDelete("DeleteShoppingCart")]
+        [HttpDelete("Delete")]
         public ActionResult Delete(int id)
         {
-            _shoppingCartServices.DeleteShoppingCart(id);
+            try
+            {
+                _shoppingCartServices.DeleteShoppingCart(id);
+                return Ok(new ActionResultModel()
+                {
+                    Message = $"Shopping cart deleted with Id {id}",
+                    Status = true,
+                    Data = ""
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ActionResultModel()
+                {
+                    Message = $"Error {ex.Message}",
+                    Status = false,
+                    Data = new Object()
+                });
+            }
 
-            return Ok($"Cart deleted successfully");
         }
+        /*
+                [HttpPut("{id}")]
+                public ActionResult UpdateShoppingCart(int id, EditShoppingCartItemDto item)
+                {
+                    try
+                    {
+                        if (id != item.Id)
+                            return BadRequest("Ids not matching");
 
-        [HttpPost("UpdateShoppingCart")]
-        public ActionResult UpdateShoppingCart(EditShoppingCartItemDto item)
+                        _shoppingCartServices.EditShoppingCart(item);
+                        return Ok(new
+                        {
+                            Message = $"Shopping cart updated with Id {item.Id}",
+                            Status = true,
+                            Data = item
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(new
+                        {
+                            Message = $"Error {ex.Message}",
+                            Status = false,
+                            Data = item
+                        });
+                    }
+                }*/
+
+        [HttpPut("{id}")]
+        public ActionResult AddShoppingCartItemOnShoppingCart(int id, [FromBody] DetailedShoppingCartDto item)
         {
-            _shoppingCartServices.EditShoppingCart(item);
+            try
+            {
+                if (id != item.Id)
+                    return BadRequest("Ids not matching");
 
-            return Ok($"Cart updated successfully");
+                _shoppingCartServices.EditShoppingCart(item);
+                return Ok(new ActionResultModel()
+                {
+                    Message = $"Shopping cart updated with Id {item.Id}",
+                    Status = true,
+                    Data = item
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ActionResultModel()
+                {
+                    Message = $"Error {ex.Message}",
+                    Status = false,
+                    Data = item
+                });
+            }
         }
     }
 }

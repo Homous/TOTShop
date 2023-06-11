@@ -17,7 +17,8 @@ namespace Application.Mapping
                         opt => opt.MapFrom(src => src.ShoppingCartItems)).ReverseMap();
             CreateMap<DetailedShoppingCartDto, ShoppingCart>()
                         .ForMember(dest => dest.ShoppingCartItems,
-                        opt => opt.MapFrom(src => src.ShoppingCartItems)).ReverseMap();
+                        opt => opt.MapFrom(src => src.ShoppingCartItems))
+                        .ReverseMap();
 
             CreateMap<EditShoppingCartItemDto, ShoppingCart>().ReverseMap();
         }

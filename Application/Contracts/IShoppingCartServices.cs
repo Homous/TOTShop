@@ -10,5 +10,6 @@ namespace Application.Contracts
         public int AddShoppingCart(ShoppingCartDto item);
         public void DeleteShoppingCart(int id);
         public void EditShoppingCart(EditShoppingCartItemDto shoppingCartDto);
+        public void EditShoppingCart(DetailedShoppingCartDto shoppingCartDto);
     }
 }

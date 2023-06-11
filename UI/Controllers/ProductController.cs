@@ -1,5 +1,6 @@
 ﻿using Application.Contracts.ProuductServices;
 using Application.Dtos.ProductDtos;
+using Application.Validations;
 //using Application.Validations;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ namespace UI.Controllers
             this.productServices = productServices;
         }
         [HttpGet]
-        // [ServiceFilter(typeof(ModelValidation))]
+        [ServiceFilter(typeof(ModelValidation))]
         public IActionResult MiniDetailsProducts()
         {
             if (!ModelState.IsValid)
@@ -50,7 +51,7 @@ namespace UI.Controllers
             try
             {
                 var product = productServices.GetProductById(id);
-                if(product == null)
+                if (product == null)
                 {
                     return NotFound(new
                     {
@@ -65,7 +66,7 @@ namespace UI.Controllers
                     ProductPage = 1,
                     Product = product
                 });
-                
+
             }
 
             catch
@@ -81,7 +82,7 @@ namespace UI.Controllers
         }
         [HttpGet("{search}")]
         [ServiceFilter(typeof(ModelValidation))]
-        public IActionResult Search( string? search)
+        public IActionResult Search(string? search)
         {
             try
             {
@@ -103,7 +104,7 @@ namespace UI.Controllers
             }
         }
         [HttpPost]
-        // [ServiceFilter(typeof(ModelValidation))]
+        [ServiceFilter(typeof(ModelValidation))]
         public IActionResult AddProduct([FromBody] AddProductDto addProduct)
         {
             try
@@ -126,7 +127,7 @@ namespace UI.Controllers
             }
         }
         [HttpPut]
-        // [ServiceFilter(typeof(ModelValidation))]
+        [ServiceFilter(typeof(ModelValidation))]
         public IActionResult UpdateProduct(UpdateProductDto updateProductDto)
         {
             try
@@ -154,7 +155,7 @@ namespace UI.Controllers
         {
             try
             {
-               var deleteProduct =  productServices.DeleteProduct(id);
+                var deleteProduct = productServices.DeleteProduct(id);
                 if (deleteProduct != false)
                 {
                     return Ok(new
@@ -169,7 +170,7 @@ namespace UI.Controllers
                     IsDone = true
                 });
             }
-            catch 
+            catch
             {
                 return BadRequest(new
                 {

@@ -21,12 +21,22 @@ namespace Infrastructure.Services.ShoppingCartServices
         }
         public int AddShoppingCart(ShoppingCartDto item)
         {
-            var cart = _mapper.Map<ShoppingCart>(item);
+            try
+            {
+                var cart = _mapper.Map<ShoppingCart>(item);
 
-            _context.ShoppingCarts.Add(cart);
-            _context.SaveChanges();
+                _context.ShoppingCarts.Add(cart);
+                _context.SaveChanges();
 
-            return cart.Id;
+                return cart.Id;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"AddingShoppingCart has failed {ex.Message}");
+                Console.WriteLine(ex);
+                return -1;
+            }
         }
 
         /* public int AddShoppingCartWithItems(ShoppingCartDto item)
@@ -43,33 +53,83 @@ namespace Infrastructure.Services.ShoppingCartServices
  */
         public void DeleteShoppingCart(int id)
         {
-            var cart = _context.ShoppingCarts.Find(id);
-            _context.ShoppingCarts.Remove(cart);
-            _context.SaveChanges();
+            try
+            {
+                var cart = _context.ShoppingCarts.Find(id);
+                _context.ShoppingCarts.Remove(cart);
+                _context.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"DeleteShoppingCart has failed {ex.Message}");
+                Console.WriteLine(ex);
+            }
         }
 
 
         public void EditShoppingCart(EditShoppingCartItemDto shoppingCartDto)
         {
-            var cart = _mapper.Map<ShoppingCart>(shoppingCartDto);
-            if (cart != null)
+            try
             {
-                _context.ShoppingCarts.Update(cart);
-                _context.SaveChanges();
+                var cart = _mapper.Map<ShoppingCart>(shoppingCartDto);
+                if (cart != null)
+                {
+                    _context.ShoppingCarts.Update(cart);
+                    _context.SaveChanges();
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EditShoppingCart has failed {ex.Message}");
+                Console.WriteLine(ex);
+            }
+        }
 
+        public void EditShoppingCart(DetailedShoppingCartDto shoppingCartDto)
+        {
+            try
+            {
+                var cart = _mapper.Map<ShoppingCart>(shoppingCartDto);
+                if (cart != null)
+                {
+                    _context.ShoppingCarts.Update(cart);
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EditShoppingCart has failed {ex.Message}");
+                Console.WriteLine(ex);
+            }
         }
 
         public DetailedShoppingCartDto GetShoppingCart(int id)
         {
-            return _mapper.ProjectTo<DetailedShoppingCartDto>(_context.ShoppingCarts).FirstOrDefault(x => x.Id == id);
-            //var cart = _context.ShoppingCarts.FirstOrDefault(x => x.Id == id);
-            //return _mapper.Map<ShoppingCartDto>(cart);
+            try
+            {
+                return _mapper.ProjectTo<DetailedShoppingCartDto>(_context.ShoppingCarts).FirstOrDefault(x => x.Id == id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"GetShoppingCart has failed {ex.Message}");
+                Console.WriteLine(ex);
+                return null;
+            }
         }
 
         public List<DetailedShoppingCartDto> GetShoppingCarts()
         {
-            return _mapper.ProjectTo<DetailedShoppingCartDto>(_context.ShoppingCarts).ToList();
+            try
+            {
+                return _mapper.ProjectTo<DetailedShoppingCartDto>(_context.ShoppingCarts).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"GetShoppingCarts has failed {ex.Message}");
+                Console.WriteLine(ex);
+                return null;
+            }
         }
 
     }
