@@ -138,6 +138,7 @@ namespace UI.Controllers
         {
             try
             {
+
                 productServices.UpdateProduct(updateProductDto);
                 return Ok(new
                 {
