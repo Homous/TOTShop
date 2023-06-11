@@ -11,7 +11,7 @@ namespace Application.Contracts.ProuductServices
     {
         List<MiniProductDto> MiniDetailsProducts();
         DetailedProductDto GetProductById(int? id);
-        List<MiniProductDto> Search(string? search);
+        List<MiniProductDto> FilteringData(string? filter);
         void UpdateProduct(UpdateProductDto updateProductDto);
         bool DeleteProduct(int? id);
         void AddProduct(AddProductDto addProductDto);
