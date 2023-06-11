@@ -1,11 +1,6 @@
-﻿using Application.Validations;
+﻿//using Application.Validations;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application
 {
@@ -13,7 +8,7 @@ namespace Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddScoped<ModelValidation>();
+            //services.AddScoped<ModelValidation>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             return services;
         }
