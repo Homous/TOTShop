@@ -99,6 +99,41 @@ namespace UI.Test.Controllers.ShoppingCart
 
         }
 
+        [Fact]
+        public async Task Update_ShouldReturn200Status()
+        {
+            // Arrange
+            var detailedShoppingCartDto = _fixture.Create<DetailedShoppingCartDto>();
+            _shoppingCartServicesMock.Setup(_ => _.EditShoppingCart(detailedShoppingCartDto));
+            _controller = new ShoppingCartController(_shoppingCartServicesMock.Object);
+
+            // Act
+            var result = _controller.AddShoppingCartItemOnShoppingCart(detailedShoppingCartDto.Id, detailedShoppingCartDto);
+            var obj = result as ObjectResult;
+            var actual = obj.Value as ActionResultModel;
+
+            // Assert
+            Assert.Equal(200, obj.StatusCode);
+
+        }
+
+        [Fact]
+        public async Task Update_ShouldReturnBadRequest400Status()
+        {
+            // Arrange
+            var detailedShoppingCartDto = _fixture.Create<DetailedShoppingCartDto>();
+            _shoppingCartServicesMock.Setup(_ => _.EditShoppingCart(detailedShoppingCartDto));
+            _controller = new ShoppingCartController(_shoppingCartServicesMock.Object);
+
+            // Act
+            var result = _controller.AddShoppingCartItemOnShoppingCart(1, detailedShoppingCartDto);
+            var obj = result as ObjectResult;
+            var actual = obj.Value as ActionResultModel;
+
+            // Assert
+            Assert.Equal(400, obj.StatusCode);
+
+        }
 
     }
 }

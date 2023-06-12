@@ -11,13 +11,11 @@ namespace Infrastructure.Services.ShoppingCartServices
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly IShoppingCartItemServices _shoppingCartItemServices;
 
-        public ShoppingCartServices(ApplicationDbContext context, IMapper mapper, IShoppingCartItemServices shoppingCartItemServices)
+        public ShoppingCartServices(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _shoppingCartItemServices = shoppingCartItemServices;
         }
         public int AddShoppingCart(ShoppingCartDto item)
         {
@@ -91,9 +89,13 @@ namespace Infrastructure.Services.ShoppingCartServices
             try
             {
                 var cart = _mapper.Map<ShoppingCart>(shoppingCartDto);
+                var cartDb = _context.ShoppingCarts.FirstOrDefault(x => x.Id == shoppingCartDto.Id);
+                cartDb.TotalCost = cart.TotalCost;
+                //cartDb.ShoppingCartItems = cart.ShoppingCartItems;
+
                 if (cart != null)
                 {
-                    _context.ShoppingCarts.Update(cart);
+                    _context.ShoppingCarts.Update(cartDb);
                     _context.SaveChanges();
                 }
             }
@@ -101,6 +103,7 @@ namespace Infrastructure.Services.ShoppingCartServices
             {
                 Console.WriteLine($"EditShoppingCart has failed {ex.Message}");
                 Console.WriteLine(ex);
+                throw ex;
             }
         }
 
