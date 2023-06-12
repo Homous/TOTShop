@@ -21,7 +21,7 @@ namespace Infrastructure.DB
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder
-                    .UseSqlServer("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=F:\\TOT\\projects\\TOTShop\\DB\\Shopdb.mdf;Integrated Security=True;Connect Timeout=30");
+                    .UseSqlServer("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=D:\\ToT\\ToTShop.mdf;Integrated Security=True;Connect Timeout=30");
             }
 
             base.OnConfiguring(optionsBuilder);

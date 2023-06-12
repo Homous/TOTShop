@@ -26,7 +26,8 @@ namespace UI.Controllers
                 return Ok(new
                 {
                     Message = "Products returned",
-                    IsDone = true
+                    IsDone = true,
+                    Data = products
                 });
             }
             catch
@@ -87,7 +88,8 @@ namespace UI.Controllers
                     return Ok(new
                     {
                         Message = "Products returned",
-                        IsDone = true
+                        IsDone = true,
+                        Data = product
                     });
                 }
                 return NotFound(new
@@ -138,7 +140,6 @@ namespace UI.Controllers
         {
             try
             {
-
                 productServices.UpdateProduct(updateProductDto);
                 return Ok(new
                 {
