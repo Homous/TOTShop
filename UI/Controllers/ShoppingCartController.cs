@@ -113,33 +113,33 @@ namespace UI.Controllers
             }
 
         }
-        /*
-                [HttpPut("{id}")]
-                public ActionResult UpdateShoppingCart(int id, EditShoppingCartItemDto item)
-                {
-                    try
-                    {
-                        if (id != item.Id)
-                            return BadRequest("Ids not matching");
 
-                        _shoppingCartServices.EditShoppingCart(item);
-                        return Ok(new
-                        {
-                            Message = $"Shopping cart updated with Id {item.Id}",
-                            Status = true,
-                            Data = item
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-                        return BadRequest(new
-                        {
-                            Message = $"Error {ex.Message}",
-                            Status = false,
-                            Data = item
-                        });
-                    }
-                }*/
+        /* [HttpPut("{id}",Name ="UpdateItems")]
+         public ActionResult UpdateShoppingCart(int id, EditShoppingCartItemDto item)
+         {
+             try
+             {
+                 if (id != item.Id)
+                     return BadRequest("Ids not matching");
+
+                 _shoppingCartServices.EditShoppingCart(item);
+                 return Ok(new
+                 {
+                     Message = $"Shopping cart updated with Id {item.Id}",
+                     Status = true,
+                     Data = item
+                 });
+             }
+             catch (Exception ex)
+             {
+                 return BadRequest(new
+                 {
+                     Message = $"Error {ex.Message}",
+                     Status = false,
+                     Data = item
+                 });
+             }
+         }*/
 
         [HttpPut("{id}")]
         public ActionResult AddShoppingCartItemOnShoppingCart(int id, [FromBody] DetailedShoppingCartDto item)
