@@ -57,9 +57,10 @@ namespace Infrastructure.Services.ProductServices
 
         public List<MiniProductDto> FilteringData(string? filter)
         {
-            var getProducts = db.Products.Where(n => n.Name.Contains(filter) || n.Description.Contains(filter)).ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
-            var getList = getProducts.ToList();
-            return getList;
+                var getProducts = db.Products.Where(n => n.Name.Contains(filter) || n.Description.Contains(filter)).ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
+                var getList = getProducts.ToList();
+                return getList;
+         
         }
 
         public List<MiniProductDto> MiniDetailsProducts()
@@ -74,7 +75,10 @@ namespace Infrastructure.Services.ProductServices
             if (updateProductDto != null)
             {
                 var map = mapper.Map<Product>(updateProductDto);
-                db.Products.Update(map);
+                var productDb = db.Products.FirstOrDefault(p => p.Id == updateProductDto.Id);
+                productDb.Price = updateProductDto.Price;
+                productDb.Name = updateProductDto.Name;
+                db.Products.Update(productDb);
                 db.SaveChanges();
                 return true;
             }

@@ -91,7 +91,7 @@ namespace Infrastructure.Test.Services.ShoppingCartTest
                             Count = 1,
                             ShoppingCartId =1,
                             ProductId = 1,
-                            Product = new Product()
+                            Product = new Domain.Entities.Product()
                             {
                                 Id=1,
                                 AddedDate= DateTime.Now,
@@ -111,7 +111,7 @@ namespace Infrastructure.Test.Services.ShoppingCartTest
                             Count = 1,
                             ShoppingCartId =1,
                             ProductId = 2,
-                            Product = new Product()
+                            Product = new Domain.Entities.Product()
                             {
                                 Id=2,
                                 AddedDate= DateTime.Now,

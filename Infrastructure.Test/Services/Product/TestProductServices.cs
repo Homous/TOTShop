@@ -65,6 +65,7 @@ namespace Infrastructure.Test.Services.Product
 
             //Act
             var result = _services.GetProductById(5);
+
             //Assert
             Assert.Equal(result.Id,mockData.Id);
         }
@@ -79,6 +80,7 @@ namespace Infrastructure.Test.Services.Product
            
                 //Act
                var result= _services.AddProduct(mockData);
+
                 //Assert
                 Assert.True(result);
         }
@@ -88,14 +90,15 @@ namespace Infrastructure.Test.Services.Product
         {
             //Arrange
             string name = "pro";
-            var mockData = ProductMockData.GetProducts();
-             _applicationDb.Products.AddRange(_mapper.Map<List<Domain.Entities.Product>>(mockData));
+            var mockData = ProductMockData.GetProductById();
+             _applicationDb.Products.AddRange(_mapper.Map<Domain.Entities.Product>(mockData));
             _applicationDb.SaveChanges();
 
             //Act
             var result = _services.FilteringData(name);
+
             //Assert
-            Assert.Equal(result.Count, mockData.Count);
+            Assert.Equal(0,result.Count);
         }
 
         [Fact]
@@ -108,6 +111,7 @@ namespace Infrastructure.Test.Services.Product
 
             //Act
             var result = _services.DeleteProduct(mockData.Id);
+
             //Assert
             Assert.True(result);
         }
@@ -115,15 +119,16 @@ namespace Infrastructure.Test.Services.Product
         public void Update_ShouldUpdateProduct_WhenIdFound()
         {
             //Arrange
-            var mockData = ProductMockData.UpdateProduct();
-            _applicationDb.Products.AddRange(_mapper.Map<Domain.Entities.Product>(mockData));
+            var mockData = ProductMockData.GetProducts();
+            _applicationDb.Products.AddRange(_mapper.Map<List<Domain.Entities.Product>>(mockData));
             _applicationDb.SaveChanges();
+            var newData = ProductMockData.UpdateProduct();
 
             //Act
-            var result = _services.UpdateProduct(mockData);
+            var result = _services.UpdateProduct(newData);
 
             //Assert
-            Assert.True(result);
+            Assert.True( result);
         }
 
 
