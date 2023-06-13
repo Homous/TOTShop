@@ -68,9 +68,6 @@ namespace Infrastructure.Test.Services.ShoppingCart
             _context.ShoppingCarts.AddRange(ShoppingCartMockData.GetShoppingCart());
             _context.SaveChanges();
 
-            //DetattchAllEntities();
-            //_context.ShoppingCarts.AsNoTracking();
-
             var editedData = ShoppingCartMockData.GetDetailedShoppingCartDto();
 
             /// Act
@@ -79,20 +76,14 @@ namespace Infrastructure.Test.Services.ShoppingCart
             /// Assert
             var shoppingCart = _context.ShoppingCarts.FirstOrDefault(x => x.Id == editedData.Id);
             shoppingCart.Should().NotBeNull();
+            shoppingCart.TotalCost.Should().Be(editedData.TotalCost);
             shoppingCart.ShoppingCartItems.Count.Should().Be(editedData.ShoppingCartItems.Count);
-            /*shoppingCart.ShoppingCartItems.FirstOrDefault(x => x.Id == 1).TotalCost
-                .Should().Be(editedData.ShoppingCartItems.FirstOrDefault(x => x.Id == 1).TotalCost);*/
+            if (editedData.ShoppingCartItems.Count > 0)
+            {
+                shoppingCart.ShoppingCartItems.FirstOrDefault(x => x.Id == 1).TotalCost
+                .Should().Be(editedData.ShoppingCartItems.FirstOrDefault(x => x.Id == 1).TotalCost);
+            }
         }
-
-        /* private void DetattchAllEntities()
-         {
-             var undetachedEntriesCopy = this.ChangeTracker.Entries()
-        .Where(e => e.State != EntityState.Detached)
-        .ToList();
-
-             foreach (var entry in undetachedEntriesCopy)
-                 entry.State = EntityState.Detached;
-         }*/
 
         [Fact]
         public async Task AddShoppingCart_ShouldReturnShoppingCartAddedId()

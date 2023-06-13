@@ -4,6 +4,7 @@ using Application.Dtos.ShoppingCartItem;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.DB;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services.ShoppingCartServices
 {
@@ -89,15 +90,41 @@ namespace Infrastructure.Services.ShoppingCartServices
             try
             {
                 var cart = _mapper.Map<ShoppingCart>(shoppingCartDto);
-                var cartDb = _context.ShoppingCarts.FirstOrDefault(x => x.Id == shoppingCartDto.Id);
-                cartDb.TotalCost = cart.TotalCost;
-                //cartDb.ShoppingCartItems = cart.ShoppingCartItems;
 
-                if (cart != null)
+                var cartDb = _context.ShoppingCarts.Include(x => x.ShoppingCartItems).FirstOrDefault(x => x.Id == shoppingCartDto.Id);
+
+                if (cartDb == null)
                 {
-                    _context.ShoppingCarts.Update(cartDb);
-                    _context.SaveChanges();
+                    _context.Add(cart);
                 }
+                else
+                {
+                    _context.Entry(cartDb).CurrentValues.SetValues(cart);
+
+                    foreach (var item in cart.ShoppingCartItems)
+                    {
+                        var existingCartItem = cartDb.ShoppingCartItems
+                            .FirstOrDefault(x => x.Id == item.Id);
+
+                        if (existingCartItem == null)
+                        {
+                            _context.Add(item);
+                        }
+                        else
+                        {
+                            existingCartItem.TotalCost = item.TotalCost;
+                        }
+                    }
+
+                    foreach (var item in cartDb.ShoppingCartItems)
+                    {
+                        if (!cart.ShoppingCartItems.Any(x => x.Id == item.Id))
+                        {
+                            _context.Remove(item);
+                        }
+                    }
+                }
+                _context.SaveChanges();
             }
             catch (Exception ex)
             {
