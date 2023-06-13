@@ -1,5 +1,6 @@
 ﻿using Application.Contracts.ProuductServices;
 using Application.Dtos.ProductDtos;
+using Application.Wrappers;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Entities;
@@ -55,17 +56,25 @@ namespace Infrastructure.Services.ProductServices
             return map;
         }
 
-        public List<MiniProductDto> FilteringData(string? filter)
+        public List<MiniProductDto> FilteringData(string? data,PaginationFilter filter)
         {
-                var getProducts = db.Products.Where(n => n.Name.Contains(filter) || n.Description.Contains(filter)).ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
+            var pagination = new PaginationFilter(filter.PageNumber, filter.PageSize);
+
+            var getProducts = db.Products.Skip((pagination.PageNumber - 1) * pagination.PageSize)
+                .Take(pagination.PageSize)
+                .Where(n => n.Name.Contains(data) || n.Description.Contains(data))
+                .ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
+
                 var getList = getProducts.ToList();
                 return getList;
-         
         }
 
-        public List<MiniProductDto> MiniDetailsProducts()
+        public List<MiniProductDto> MiniDetailsProducts(PaginationFilter filter)
         {
-                var getProducts = db.Products.ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
+            var pagination = new PaginationFilter(filter.PageNumber, filter.PageSize);
+                var getProducts = db.Products.Skip((pagination.PageNumber-1)* pagination.PageSize)
+                .Take(pagination.PageSize)
+                .ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
                 var getList = getProducts.ToList();
                 return getList;
         }

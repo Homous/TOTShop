@@ -1,5 +1,6 @@
 ﻿using Application.Dtos.ProductDtos;
 using Application.Mapping;
+using Application.Wrappers;
 using AutoMapper;
 using Domain.Entities;
 using FluentAssertions;
@@ -45,12 +46,13 @@ namespace Infrastructure.Test.Services.Product
         public void Get_ShouldReturnProducts_WhenDataFound()
         {
             //Arrange
+            var paging = new PaginationFilter();
             var mockData = ProductMockData.GetProducts();
             _applicationDb.Products.AddRange(_mapper.Map<List<Domain.Entities.Product>>(mockData));
             _applicationDb.SaveChanges();
 
             //Act
-            var result = _services.MiniDetailsProducts();
+            var result = _services.MiniDetailsProducts(paging);
             //Assert
             Assert.Equal(result.Count, mockData.Count);
         }
@@ -91,11 +93,12 @@ namespace Infrastructure.Test.Services.Product
             //Arrange
             string name = "pro";
             var mockData = ProductMockData.GetProductById();
-             _applicationDb.Products.AddRange(_mapper.Map<Domain.Entities.Product>(mockData));
+            var paging = new PaginationFilter(1, 1);
+            _applicationDb.Products.AddRange(_mapper.Map<Domain.Entities.Product>(mockData));
             _applicationDb.SaveChanges();
 
             //Act
-            var result = _services.FilteringData(name);
+            var result = _services.FilteringData(name,paging);
 
             //Assert
             Assert.Equal(0,result.Count);

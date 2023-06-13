@@ -1,6 +1,8 @@
 ﻿using Application.Contracts.ProuductServices;
 using Application.Dtos.ProductDtos;
 using Application.Validations;
+using Application.Wrappers;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace UI.Controllers
@@ -18,30 +20,24 @@ namespace UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult MiniDetailsProducts()
+        public IActionResult MiniDetailsProducts([FromQuery] PaginationFilter filter)
         {
             try
             {
-                var products = productServices.MiniDetailsProducts();
-                return Ok(new
-                {
-                    Message = "Products returned",
-                    IsDone = true,
-                    Data = products
-                });
+                var products = productServices.MiniDetailsProducts(filter);
+                return Ok(new PagedResponse<List<MiniProductDto>>(products,filter.PageNumber,filter.PageSize));
             }
             catch
             {
-                return BadRequest(new
+                return BadRequest(new ResultModel()
                 {
                     Message = "Error",
-                    IsDone = false,
-                    ProductPage = 0
+                    Status = false
                 });
             }
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("ProudactById")]
         public IActionResult ProudactById(int? id)
         {
             try
@@ -49,63 +45,49 @@ namespace UI.Controllers
                 var product = productServices.GetProductById(id);
                 if(product == null)
                 {
-                    return NotFound(new
+                    return NotFound(new ResultModel()
                     {
                         Message = "Product NotFound",
-                        IsDone = true
+                        Status = false
                     });
                 }
-                return Ok(new
-                {
-                    Message = "Product returned",
-                    IsDone = true,
-                    ProductPage = 1,
-                    Product = product
-                });
-                
+                return Ok(new ResultModel("",true, product));
             }
 
             catch
             {
-                return BadRequest(new
+                return BadRequest(new ResultModel()
                 {
                     Message = "Error",
-                    IsDone = false,
-                    ProductPage = 0
+                    Status = false
                 });
             }
 
         }
 
-        [HttpGet("{search}")]
-        public IActionResult FilteringData(string? search)
+        [HttpGet("FilteringData")]
+        public IActionResult FilteringData(string? search,[FromQuery]PaginationFilter filter)
         {
             try
             {
-               var product = productServices.FilteringData(search);
-                if (product != null)
+               var products = productServices.FilteringData(search,filter);
+
+                if (products != null)
                 {
-                    return Ok(new
-                    {
-                        Message = "Products returned",
-                        IsDone = true,
-                        Data = product
-                    });
+                    return Ok(new PagedResponse<List<MiniProductDto>>(products, filter.PageNumber, filter.PageSize));
                 }
-                return NotFound(new
+                return NotFound(new ResultModel()
                 {
                     Message = "Product not founded",
-                    IsDone = false,
-                    ProductPage = 0
+                    Status = true
                 });
             }
             catch
             {
-                return BadRequest(new
+                return BadRequest(new ResultModel()
                 {
                     Message = "Error",
-                    IsDone = false,
-                    ProductPage = 0
+                    Status = false
                 });
             }
         }
@@ -117,19 +99,14 @@ namespace UI.Controllers
             try
             {
                  productServices.AddProduct(addProduct);
-                return Ok(new
-                {
-                    Message = "Product Was Added.",
-                    IsDone = true,
-                    Product = addProduct
-                });
+                return Ok(new ResultModel("", true, addProduct));
             }
             catch
             {
-                return BadRequest(new
+                return BadRequest(new ResultModel()
                 {
                     Message = "Error",
-                    IsDone = false
+                    Status = false
                 });
             }
         }
@@ -141,19 +118,14 @@ namespace UI.Controllers
             try
             {
                 productServices.UpdateProduct(updateProductDto);
-                return Ok(new
-                {
-                    Message = "Product Was Updated.",
-                    IsDone = true,
-                    Product = updateProductDto
-                });
+                return Ok(new ResultModel("", true, updateProductDto));
             }
             catch
             {
-                return BadRequest(new
+                return BadRequest(new ResultModel()
                 {
                     Message = "Error",
-                    IsDone = false
+                    Status = false
                 });
             }
         }
@@ -166,24 +138,24 @@ namespace UI.Controllers
                var deleteProduct =  productServices.DeleteProduct(id);
                 if (deleteProduct != false)
                 {
-                    return Ok(new
+                    return Ok(new ResultModel()
                     {
-                        Message = "Product Was Deleted.",
-                        IsDone = true
+                        Message = "Product Was Deleted",
+                        Status = true
                     });
                 }
-                return NotFound(new
+                return NotFound(new ResultModel()
                 {
-                    Message = "Product Not Founded.",
-                    IsDone = true
+                    Message = "Product not founded",
+                    Status = true
                 });
             }
             catch 
             {
-                return BadRequest(new
+                return BadRequest(new ResultModel()
                 {
                     Message = "Error",
-                    IsDone = false
+                    Status = false
                 });
             }
         }

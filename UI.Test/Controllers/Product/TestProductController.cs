@@ -1,6 +1,7 @@
 ﻿using Application.Contracts.ProuductServices;
 using Application.Dtos.ProductDtos;
 using Application.Dtos.ShoppingCart;
+using Application.Wrappers;
 using Domain.Entities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -23,10 +24,11 @@ namespace UI.Test.Controllers.Product
         {
             //Arrange
             var productMock = new ProductController(_moqServices.Object);
+            var paging = new PaginationFilter(1,1);
             var productList = _fixture.CreateMany<MiniProductDto>(3).ToList();
-            _moqServices.Setup(p => p.MiniDetailsProducts()).Returns(productList);
+            _moqServices.Setup(p => p.MiniDetailsProducts(paging)).Returns(productList);
             //Act
-            var result = productMock.MiniDetailsProducts(); 
+            var result = productMock.MiniDetailsProducts(paging); 
 
             //Assert
             Assert.IsType<OkObjectResult>(result);
@@ -36,10 +38,10 @@ namespace UI.Test.Controllers.Product
         public void Get_ShouldReturnBadRequestResult_WhenException()
         {
             //Arrange
-            _moqServices.Setup(p => p.MiniDetailsProducts()).Throws(new Exception());
+            _moqServices.Setup(p => p.MiniDetailsProducts(null)).Throws(new Exception());
             var productMock = new ProductController(_moqServices.Object);
             //Act
-            var result = productMock.MiniDetailsProducts();
+            var result = productMock.MiniDetailsProducts(null);
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(result);
@@ -175,11 +177,12 @@ namespace UI.Test.Controllers.Product
             //Arrange
             string productName = "pro";
             var productMock = new ProductController(_moqServices.Object);
+            var paging = new PaginationFilter(1, 1);
             var productsDto = _fixture.Create<List<MiniProductDto>>();
-            _moqServices.Setup(p => p.FilteringData(productName)).Returns(productsDto);
+            _moqServices.Setup(p => p.FilteringData(productName, paging)).Returns(productsDto);
 
             //Act
-            var result = productMock.FilteringData(productName);
+            var result = productMock.FilteringData(productName, paging);
 
             //Assert
             result.Should().BeOfType<OkObjectResult>();
@@ -191,10 +194,10 @@ namespace UI.Test.Controllers.Product
             string productName = "aass";
             string Name = "aaa";
             var productMock = new ProductController(_moqServices.Object);
-            _moqServices.Setup(p => p.FilteringData(productName));
+            _moqServices.Setup(p => p.FilteringData(productName,null));
 
             //Act
-            var result = productMock.FilteringData(Name);
+            var result = productMock.FilteringData(Name,null);
 
             //Assert
             result.Should().BeOfType<NotFoundObjectResult>();
