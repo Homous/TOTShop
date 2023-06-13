@@ -138,19 +138,12 @@ namespace Infrastructure.Test.Services.ShoppingCartTest
                 ShoppingCartItems = new List<DetailedShoppingCartItemDto>
                 {
                     new DetailedShoppingCartItemDto()
-                    {
-                        Id=1,
-                        TotalCost = 50,
-                        Count=10,
-                        ProductId=1
-                    },
-                    new DetailedShoppingCartItemDto()
-                    {
-                        Id=2,
-                        TotalCost = 30,
-                        Count=2,
-                        ProductId=2
-                    }
+                        {
+                            Id=1,
+                            TotalCost = 50,
+                            Count = 1,
+                            ProductId = 1
+                        }
                 }
             };
         }
