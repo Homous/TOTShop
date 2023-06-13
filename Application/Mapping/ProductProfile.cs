@@ -15,8 +15,10 @@ namespace Application.Mapping
         { 
             CreateMap<Product,MiniProductDto>();
             CreateMap<Product, DetailedProductDto>();
+            CreateMap<DetailedProductDto, Product>();
             CreateMap<UpdateProductDto, Product > ();
             CreateMap<AddProductDto, Product>();
+            //CreateMap<MiniProductDto, Product>();
 
 
         }

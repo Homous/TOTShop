@@ -11,10 +11,11 @@ namespace UI.Test.Controllers.Product
     public class TestProductController
     {
         private readonly Fixture _fixture;
-        private readonly Mock<IProductServices> _moqServices =new();
+        private readonly Mock<IProductServices> _moqServices;
         public TestProductController()
         {
             _fixture = new Fixture();
+            _moqServices = new Mock<IProductServices>();
         }
 
         [Fact]
@@ -22,9 +23,10 @@ namespace UI.Test.Controllers.Product
         {
             //Arrange
             var productMock = new ProductController(_moqServices.Object);
-
+            var productList = _fixture.CreateMany<MiniProductDto>(3).ToList();
+            _moqServices.Setup(p => p.MiniDetailsProducts()).Returns(productList);
             //Act
-            var result = productMock.MiniDetailsProducts();
+            var result = productMock.MiniDetailsProducts(); 
 
             //Assert
             Assert.IsType<OkObjectResult>(result);
@@ -126,7 +128,7 @@ namespace UI.Test.Controllers.Product
         public void Delete_ShouldReturnBadRequestResult_WhenExceptions()
         {
             //Arrange
-            int productId = 2;
+            int productId = 5;
             var productMock = new ProductController(_moqServices.Object);
             var productsDto = _fixture.Create<DetailedProductDto>();
             _moqServices.Setup(p => p.DeleteProduct(productId)).Throws(new Exception());
@@ -173,14 +175,8 @@ namespace UI.Test.Controllers.Product
             //Arrange
             string productName = "pro";
             var productMock = new ProductController(_moqServices.Object);
-            var productDto = new List<MiniProductDto>
-            {
-                new MiniProductDto(){
-                Name = "pro",
-                ImageUrl = "Test",
-                Price = 500 }
-            };
-            _moqServices.Setup(p => p.FilteringData(productName)).Returns(productDto);
+            var productsDto = _fixture.Create<List<MiniProductDto>>();
+            _moqServices.Setup(p => p.FilteringData(productName)).Returns(productsDto);
 
             //Act
             var result = productMock.FilteringData(productName);
@@ -195,14 +191,7 @@ namespace UI.Test.Controllers.Product
             string productName = "aass";
             string Name = "aaa";
             var productMock = new ProductController(_moqServices.Object);
-            var productDto = new List<MiniProductDto>
-            {
-               new MiniProductDto(){
-              Name = "pro",
-              ImageUrl = "Test",
-              Price = 500 }
-            };
-            _moqServices.Setup(p => p.FilteringData(productName)).Returns(productDto);
+            _moqServices.Setup(p => p.FilteringData(productName));
 
             //Act
             var result = productMock.FilteringData(Name);
@@ -215,36 +204,30 @@ namespace UI.Test.Controllers.Product
         public void Update_ShouldReturnOkResult_WhenDataValid()
         {
             //Arrange
-            var productMock = new ProductController(_moqServices.Object);
-            var productDto = new UpdateProductDto
-            {
-              Quantity= 100,
-              Name = "pro",
-              ImageUrl = "Test",
-              Price = 500 ,
-              Description = "pro",
-              Id = 1
-            };
-            var updateProductDto = new UpdateProductDto
-            {
-                Quantity = 100,
-                Name = "pro updated",
-                ImageUrl = "Test",
-                Price = 500,
-                Description = "pro",
-                Id = 1
-            };
-
+            var productDto = _fixture.Create<UpdateProductDto>();
             _moqServices.Setup(p => p.UpdateProduct(productDto));
-
+            var productMock = new ProductController(_moqServices.Object);
             //Act
-            var result = productMock.UpdateProduct(updateProductDto);
+            var result = productMock.UpdateProduct(productDto);
 
             //Assert
             result.Should().BeOfType<OkObjectResult>();
         }
+        [Fact]
+        public void Update_ShouldReturnBadRequestResult_WhenExceptions()
+        {
+            //Arrange
+            var productDto = _fixture.Create<UpdateProductDto>();
+            _moqServices.Setup(p => p.UpdateProduct(productDto)).Throws(new Exception());
+            var productMock = new ProductController(_moqServices.Object);
+            //Act
+            var result = productMock.UpdateProduct(productDto);
 
-        
+            //Assert
+            result.Should().BeOfType<BadRequestObjectResult>();
+        }
+
+
 
     }
 }

@@ -23,14 +23,16 @@ namespace Infrastructure.Services.ProductServices
             this.db = db;
             this.mapper = mapper;
         }
-        public void AddProduct( AddProductDto addProductDto)
+        public bool AddProduct(AddProductDto addProductDto)
         {
             if(addProductDto != null)
             {
                 var map = mapper.Map<Product>(addProductDto);
                 db.Products.Add(map);
                 db.SaveChanges();
+                return true;
             }
+            return false;
         }
 
         public bool DeleteProduct(int? id)
@@ -50,15 +52,15 @@ namespace Infrastructure.Services.ProductServices
         {
             var getProduct = db.Products.Find(id);
             var map = mapper.Map<DetailedProductDto>(getProduct);
-                return map;
+            return map;
         }
 
         public List<MiniProductDto> FilteringData(string? filter)
         {
-            var getProducts = db.Products.Where(n => n.Name.Contains(filter) || n.Description.Contains(filter)).ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
-            var getList = getProducts.ToList();
-           
-            return getList;
+                var getProducts = db.Products.Where(n => n.Name.Contains(filter) || n.Description.Contains(filter)).ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
+                var getList = getProducts.ToList();
+                return getList;
+         
         }
 
         public List<MiniProductDto> MiniDetailsProducts()
@@ -68,14 +70,19 @@ namespace Infrastructure.Services.ProductServices
                 return getList;
         }
 
-        public void UpdateProduct( UpdateProductDto updateProductDto)
+        public bool UpdateProduct( UpdateProductDto updateProductDto)
         {
             if (updateProductDto != null)
             {
                 var map = mapper.Map<Product>(updateProductDto);
-                db.Products.Update(map);
+                var productDb = db.Products.FirstOrDefault(p => p.Id == updateProductDto.Id);
+                productDb.Price = updateProductDto.Price;
+                productDb.Name = updateProductDto.Name;
+                db.Products.Update(productDb);
                 db.SaveChanges();
+                return true;
             }
+            return false;
         }
     }
 }
