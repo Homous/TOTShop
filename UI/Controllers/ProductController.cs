@@ -2,164 +2,162 @@
 using Application.Dtos.ProductDtos;
 using Application.Validations;
 using Application.Wrappers;
-using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
-namespace UI.Controllers
+namespace UI.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+
+public class ProductController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
+    private readonly IProductServices productServices;
 
-    public class ProductController : ControllerBase
+    public ProductController(IProductServices productServices)
     {
-        private readonly IProductServices productServices;
+        this.productServices = productServices;
+    }
 
-        public ProductController(IProductServices productServices)
+    [HttpGet]
+    public IActionResult MiniDetailsProducts([FromQuery] PaginationFilter filter)
+    {
+        try
         {
-            this.productServices = productServices;
+            var products = productServices.MiniDetailsProducts(filter);
+            return Ok(new PagedResponse<List<MiniProductDto>>(products, filter.PageNumber, filter.PageSize));
         }
-
-        [HttpGet]
-        public IActionResult MiniDetailsProducts([FromQuery] PaginationFilter filter)
+        catch
         {
-            try
+            return BadRequest(new ResultModel()
             {
-                var products = productServices.MiniDetailsProducts(filter);
-                return Ok(new PagedResponse<List<MiniProductDto>>(products,filter.PageNumber,filter.PageSize));
-            }
-            catch
-            {
-                return BadRequest(new ResultModel()
-                {
-                    Message = "Error",
-                    Status = false
-                });
-            }
+                Message = "Error",
+                Status = false
+            });
         }
+    }
 
-        [HttpGet("ProudactById")]
-        public IActionResult ProudactById(int? id)
+    [HttpGet("ProudactById")]
+    public IActionResult ProudactById(int? id)
+    {
+        try
         {
-            try
+            var product = productServices.GetProductById(id);
+            if (product == null)
             {
-                var product = productServices.GetProductById(id);
-                if(product == null)
-                {
-                    return NotFound(new ResultModel()
-                    {
-                        Message = "Product NotFound",
-                        Status = false
-                    });
-                }
-                return Ok(new ResultModel("",true, product));
-            }
-
-            catch
-            {
-                return BadRequest(new ResultModel()
-                {
-                    Message = "Error",
-                    Status = false
-                });
-            }
-
-        }
-
-        [HttpGet("FilteringData")]
-        public IActionResult FilteringData(string? search,[FromQuery]PaginationFilter filter)
-        {
-            try
-            {
-               var products = productServices.FilteringData(search,filter);
-
-                if (products != null)
-                {
-                    return Ok(new PagedResponse<List<MiniProductDto>>(products, filter.PageNumber, filter.PageSize));
-                }
                 return NotFound(new ResultModel()
                 {
-                    Message = "Product not founded",
-                    Status = true
-                });
-            }
-            catch
-            {
-                return BadRequest(new ResultModel()
-                {
-                    Message = "Error",
+                    Message = "Product NotFound",
                     Status = false
                 });
             }
+            return Ok(new ResultModel("", true, product));
         }
 
-        [HttpPost]
-        [ServiceFilter(typeof(ModelValidation))]
-        public IActionResult AddProduct([FromBody] AddProductDto addProduct)
+        catch
         {
-            try
+            return BadRequest(new ResultModel()
             {
-                 productServices.AddProduct(addProduct);
-                return Ok(new ResultModel("", true, addProduct));
-            }
-            catch
-            {
-                return BadRequest(new ResultModel()
-                {
-                    Message = "Error",
-                    Status = false
-                });
-            }
+                Message = "Error",
+                Status = false
+            });
         }
-
-        [HttpPut]
-        [ServiceFilter(typeof(ModelValidation))]
-        public IActionResult UpdateProduct(UpdateProductDto updateProductDto)
-        {
-            try
-            {
-                productServices.UpdateProduct(updateProductDto);
-                return Ok(new ResultModel("", true, updateProductDto));
-            }
-            catch
-            {
-                return BadRequest(new ResultModel()
-                {
-                    Message = "Error",
-                    Status = false
-                });
-            }
-        }
-
-        [HttpDelete]
-        public IActionResult DeleteProduct([FromQuery] int? id)
-        {
-            try
-            {
-               var deleteProduct =  productServices.DeleteProduct(id);
-                if (deleteProduct != false)
-                {
-                    return Ok(new ResultModel()
-                    {
-                        Message = "Product Was Deleted",
-                        Status = true
-                    });
-                }
-                return NotFound(new ResultModel()
-                {
-                    Message = "Product not founded",
-                    Status = true
-                });
-            }
-            catch 
-            {
-                return BadRequest(new ResultModel()
-                {
-                    Message = "Error",
-                    Status = false
-                });
-            }
-        }
-
 
     }
+
+    [HttpGet("FilteringData")]
+    public IActionResult FilteringData(string? search, [FromQuery] PaginationFilter filter)
+    {
+        try
+        {
+            var products = productServices.FilteringData(search, filter);
+
+            if (products != null)
+            {
+                return Ok(new PagedResponse<List<MiniProductDto>>(products, filter.PageNumber, filter.PageSize));
+            }
+            return NotFound(new ResultModel()
+            {
+                Message = "Product not founded",
+                Status = true
+            });
+        }
+        catch
+        {
+            return BadRequest(new ResultModel()
+            {
+                Message = "Error",
+                Status = false
+            });
+        }
+    }
+
+    [HttpPost]
+    [ServiceFilter(typeof(ModelValidation))]
+    public IActionResult AddProduct([FromBody] AddProductDto addProduct)
+    {
+        try
+        {
+            productServices.AddProduct(addProduct);
+            return Ok(new ResultModel("", true, addProduct));
+        }
+        catch
+        {
+            return BadRequest(new ResultModel()
+            {
+                Message = "Error",
+                Status = false
+            });
+        }
+    }
+
+    [HttpPut]
+    [ServiceFilter(typeof(ModelValidation))]
+    public IActionResult UpdateProduct(UpdateProductDto updateProductDto)
+    {
+        try
+        {
+            productServices.UpdateProduct(updateProductDto);
+            return Ok(new ResultModel("", true, updateProductDto));
+        }
+        catch
+        {
+            return BadRequest(new ResultModel()
+            {
+                Message = "Error",
+                Status = false
+            });
+        }
+    }
+
+    [HttpDelete]
+    public IActionResult DeleteProduct([FromQuery] int? id)
+    {
+        try
+        {
+            var deleteProduct = productServices.DeleteProduct(id);
+            if (deleteProduct != false)
+            {
+                return Ok(new ResultModel()
+                {
+                    Message = "Product Was Deleted",
+                    Status = true
+                });
+            }
+            return NotFound(new ResultModel()
+            {
+                Message = "Product not founded",
+                Status = true
+            });
+        }
+        catch
+        {
+            return BadRequest(new ResultModel()
+            {
+                Message = "Error",
+                Status = false
+            });
+        }
+    }
+
+
 }
