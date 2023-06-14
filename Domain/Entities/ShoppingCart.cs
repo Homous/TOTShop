@@ -1,8 +1,7 @@
-﻿namespace Domain.Entities
+﻿namespace Domain.Entities;
+
+public class ShoppingCart : BaseEntity
 {
-    public class ShoppingCart : BaseEntity
-    {
-        public decimal TotalCost { get; set; }
-        public List<ShoppingCartItem> ShoppingCartItems { get; set; }
-    }
+    public decimal TotalCost { get; set; }
+    public List<ShoppingCartItem> ShoppingCartItems { get; set; }
 }

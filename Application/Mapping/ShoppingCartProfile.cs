@@ -3,23 +3,22 @@ using Application.Dtos.ShoppingCartItem;
 using AutoMapper;
 using Domain.Entities;
 
-namespace Application.Mapping
+namespace Application.Mapping;
+
+public class ShoppingCartProfile : Profile
 {
-    public class ShoppingCartProfile : Profile
+    public ShoppingCartProfile()
     {
-        public ShoppingCartProfile()
-        {
-            CreateMap<ShoppingCart, ShoppingCartDto>();
-            CreateMap<ShoppingCart, DetailedShoppingCartDto>();
+        CreateMap<ShoppingCart, ShoppingCartDto>();
+        CreateMap<ShoppingCart, DetailedShoppingCartDto>();
 
-            CreateMap<ShoppingCartDto, ShoppingCart>()
-                        .ForMember(dest => dest.ShoppingCartItems,
-                        opt => opt.MapFrom(src => src.ShoppingCartItems)).ReverseMap();
-            CreateMap<DetailedShoppingCartDto, ShoppingCart>()
-                        .ForMember(dest => dest.ShoppingCartItems,
-                        opt => opt.MapFrom(src => src.ShoppingCartItems)).ReverseMap();
+        CreateMap<ShoppingCartDto, ShoppingCart>()
+                    .ForMember(dest => dest.ShoppingCartItems,
+                    opt => opt.MapFrom(src => src.ShoppingCartItems)).ReverseMap();
+        CreateMap<DetailedShoppingCartDto, ShoppingCart>()
+                    .ForMember(dest => dest.ShoppingCartItems,
+                    opt => opt.MapFrom(src => src.ShoppingCartItems)).ReverseMap();
 
-            CreateMap<EditShoppingCartItemDto, ShoppingCart>().ReverseMap();
-        }
+        CreateMap<EditShoppingCartItemDto, ShoppingCart>().ReverseMap();
     }
 }

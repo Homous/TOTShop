@@ -1,10 +1,9 @@
 ﻿using Application.Dtos.ShoppingCartItem;
 
-namespace Application.Dtos.ShoppingCart
+namespace Application.Dtos.ShoppingCart;
+
+public class ShoppingCartDto
 {
-    public class ShoppingCartDto
-    {
-        public decimal TotalCost { get; set; }
-        public List<ShoppingCartItemDto> ShoppingCartItems { get; set; }
-    }
+    public decimal TotalCost { get; set; }
+    public List<ShoppingCartItemDto> ShoppingCartItems { get; set; }
 }
