@@ -1,9 +1,8 @@
-﻿namespace Domain.Entities
+﻿namespace Domain.Entities;
+
+// Base Entity
+public class BaseEntity
 {
-    // Base Entity
-    public class BaseEntity
-    {
-        public int Id { get; set; }
-        public DateTime AddedDate { get; set; } = DateTime.Today;
-    }
+    public int Id { get; set; }
+    public DateTime AddedDate { get; set; } = DateTime.Today;
 }
