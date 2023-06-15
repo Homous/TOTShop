@@ -110,7 +110,7 @@ public class TestShoppingCartServices : IDisposable
         /// Act
         var result = _services.AddShoppingCart(shoppingCartDto);
         
-        /// Assert
+        // Assert
         _context.ShoppingCarts.Count().Should().Be(result);
     }
 
@@ -125,7 +125,7 @@ public class TestShoppingCartServices : IDisposable
         /// Act
           _services.DeleteShoppingCart(detailedShoppingCartDto.Id);
 
-        /// Assert
+        // Assert
         _context.ShoppingCarts.Count().Should().Be(0);
     }
 
