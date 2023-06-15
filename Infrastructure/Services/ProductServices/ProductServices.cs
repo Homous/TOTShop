@@ -9,21 +9,21 @@ using Infrastructure.DB;
 namespace Infrastructure.Services.ProductServices;
 public class ProductServices : IProductServices
 {
-    private readonly ApplicationDbContext db;
-    private readonly IMapper mapper;
+    private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
     public ProductServices(ApplicationDbContext db, IMapper mapper)
     {
-        this.db = db;
-        this.mapper = mapper;
+        _context = db;
+        _mapper = mapper;
     }
     public bool AddProduct(AddProductDto addProductDto)
     {
         if (addProductDto != null)
         {
-            var map = mapper.Map<Product>(addProductDto);
-            db.Products.Add(map);
-            db.SaveChanges();
+            var map = _mapper.Map<Product>(addProductDto);
+            _context.Products.Add(map);
+            _context.SaveChanges();
             return true;
         }
         return false;
@@ -31,11 +31,11 @@ public class ProductServices : IProductServices
 
     public bool DeleteProduct(int? id)
     {
-        var getProduct = db.Products.FirstOrDefault(x => x.Id == id);
+        var getProduct = _context.Products.FirstOrDefault(x => x.Id == id);
         if (getProduct != null)
         {
-            db.Products.Remove(getProduct);
-            db.SaveChanges();
+            _context.Products.Remove(getProduct);
+            _context.SaveChanges();
             return true;
         }
 
@@ -44,8 +44,8 @@ public class ProductServices : IProductServices
 
     public DetailedProductDto GetProductById(int? id)
     {
-        var getProduct = db.Products.Find(id);
-        var map = mapper.Map<DetailedProductDto>(getProduct);
+        var getProduct = _context.Products.Find(id);
+        var map = _mapper.Map<DetailedProductDto>(getProduct);
         return map;
     }
 
@@ -53,10 +53,10 @@ public class ProductServices : IProductServices
     {
         var pagination = new PaginationFilter(filter.PageNumber, filter.PageSize);
 
-        var getProducts = db.Products.Skip((pagination.PageNumber - 1) * pagination.PageSize)
+        var getProducts = _context.Products.Skip((pagination.PageNumber - 1) * pagination.PageSize)
             .Take(pagination.PageSize)
             .Where(n => n.Name.Contains(data) || n.Description.Contains(data))
-            .ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
+            .ProjectTo<MiniProductDto>(_mapper.ConfigurationProvider);
 
         var getList = getProducts.ToList();
         return getList;
@@ -65,9 +65,9 @@ public class ProductServices : IProductServices
     public List<MiniProductDto> MiniDetailsProducts(PaginationFilter filter)
     {
         var pagination = new PaginationFilter(filter.PageNumber, filter.PageSize);
-        var getProducts = db.Products.Skip((pagination.PageNumber - 1) * pagination.PageSize)
+        var getProducts = _context.Products.Skip((pagination.PageNumber - 1) * pagination.PageSize)
         .Take(pagination.PageSize)
-        .ProjectTo<MiniProductDto>(mapper.ConfigurationProvider);
+        .ProjectTo<MiniProductDto>(_mapper.ConfigurationProvider);
         var getList = getProducts.ToList();
         return getList;
         //return PagedResponse<List<MiniProductDto>>(getList, filter.PageNumber, filter.PageSize);
@@ -77,12 +77,12 @@ public class ProductServices : IProductServices
     {
         if (updateProductDto != null)
         {
-            var map = mapper.Map<Product>(updateProductDto);
-            var productDb = db.Products.FirstOrDefault(p => p.Id == updateProductDto.Id);
+            var map = _mapper.Map<Product>(updateProductDto);
+            var productDb = _context.Products.FirstOrDefault(p => p.Id == updateProductDto.Id);
             productDb.Price = updateProductDto.Price;
             productDb.Name = updateProductDto.Name;
-            db.Products.Update(productDb);
-            db.SaveChanges();
+            _context.Products.Update(productDb);
+            _context.SaveChanges();
             return true;
         }
         return false;
