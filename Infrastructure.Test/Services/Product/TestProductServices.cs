@@ -1,5 +1,8 @@
-﻿using Application.Mapping;
+﻿using Application.Contracts.ProuductServices;
+using Application.Dtos.ProductDtos;
+using Application.Mapping;
 using Application.Wrappers;
+using AutoFixture;
 using AutoMapper;
 using Infrastructure.DB;
 using Infrastructure.Services.ProductServices;
@@ -9,16 +12,17 @@ namespace Infrastructure.Test.Services.Product;
 
 public class TestProductServices : IDisposable
 {
-    private readonly ApplicationDbContext _applicationDb;
+    private readonly ApplicationDbContext _context;
     private readonly Mapper _mapper;
-    private readonly ProductServices _services;
+    private readonly IProductServices _services;
+    private readonly Fixture _fixture;
 
     public TestProductServices()
     {
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()).Options;
-        _applicationDb = new ApplicationDbContext(options);
-        _applicationDb.Database.EnsureCreated();
+        _context = new ApplicationDbContext(options);
+        _context.Database.EnsureCreated();
 
         var mockAutoMapper = new MapperConfiguration(mc =>
         {
@@ -26,81 +30,82 @@ public class TestProductServices : IDisposable
         }).CreateMapper().ConfigurationProvider;
 
         _mapper = new Mapper(mockAutoMapper);
-        _services = new ProductServices(_applicationDb, _mapper);
+        _services = new ProductServices(_context, _mapper);
+        _fixture = new Fixture();
     }
 
     [Fact]
-    public void Get_ShouldReturnProducts_WhenDataFound()
+    public void Get_WhenDataFound_ShouldReturnProducts()
     {
         //Arrange
         var paging = new PaginationFilter();
-        var mockData = ProductMockData.GetProducts();
-        _applicationDb.Products.AddRange(_mapper.Map<List<Domain.Entities.Product>>(mockData));
-        _applicationDb.SaveChanges();
+        var detailedProductDtoList = _fixture.CreateMany<DetailedProductDto>(3).ToList();
+        _context.Products.AddRange(_mapper.Map<List<Domain.Entities.Product>>(detailedProductDtoList));
+        _context.SaveChanges();
 
         //Act
         var result = _services.MiniDetailsProducts(paging);
         //Assert
-        Assert.Equal(result.Count, mockData.Count);
+        Assert.Equal(result.Count, detailedProductDtoList.Count);
     }
 
     [Fact]
-    public void GetById_ShouldReturnProduct_WhenDataFound()
+    public void GetById_WhenDataFound_ShouldReturnProduct()
     {
-        //Arrange
-        var mockData = ProductMockData.GetProductById();
-        _applicationDb.Products.Add(_mapper.Map<Domain.Entities.Product>(mockData));
-        _applicationDb.SaveChanges();
+        //Arrange        
+        var detailedProductDto = _fixture.Create<DetailedProductDto>();
+        _context.Products.Add(_mapper.Map<Domain.Entities.Product>(detailedProductDto));
+        _context.SaveChanges();
 
         //Act
-        var result = _services.GetProductById(5);
+        var result = _services.GetProductById(detailedProductDto.Id);
 
         //Assert
-        Assert.Equal(result.Id, mockData.Id);
+        Assert.Equal(result.Id, detailedProductDto.Id);
     }
 
     [Fact]
-    public void Add_ShouldAddProduct_WhenDataValid()
+    public void Add_WhenDataValid_ShouldAddProduct()
     {
         //Arrange
-        var mockData = ProductMockData.AddProduct();
-        var product = _applicationDb.Products.Add(_mapper.Map<Domain.Entities.Product>(mockData));
-        _applicationDb.SaveChanges();
+        var addProductDto = _fixture.Create<AddProductDto>();
+        var product = _context.Products.Add(_mapper.Map<Domain.Entities.Product>(addProductDto));
+        _context.SaveChanges();
 
         //Act
-        var result = _services.AddProduct(mockData);
+        var result = _services.AddProduct(addProductDto);
 
         //Assert
         Assert.True(result);
     }
 
     [Fact]
-    public void Filter_ShouldReturnProducts_WhenDataFound()
+    public void Filter_WhenDataFound_ShouldReturnProducts()
     {
         //Arrange
-        string name = "pro";
-        var mockData = ProductMockData.GetProductById();
+        var detailedProductDto = _fixture.Create<DetailedProductDto>();
+        var name = detailedProductDto.Name;
         var paging = new PaginationFilter(1, 1);
-        _applicationDb.Products.AddRange(_mapper.Map<Domain.Entities.Product>(mockData));
-        _applicationDb.SaveChanges();
+        _context.Products.AddRange(_mapper.Map<Domain.Entities.Product>(detailedProductDto));
+        _context.SaveChanges();
 
         //Act
         var result = _services.FilteringData(name, paging);
 
         //Assert
-        Assert.Equal(0, result.Count);
+        Assert.Equal(1, result.Count);
     }
 
     [Fact]
-    public void Delete_ShouldDeleteProduct_WhenIdFound()
+    public void Delete_WhenIdFound_ShouldDeleteProduct()
     {
         //Arrange
-        var mockData = ProductMockData.UpdateProduct();
-        _applicationDb.Products.AddRange(_mapper.Map<Domain.Entities.Product>(mockData));
-        _applicationDb.SaveChanges();
+        var updateProductDto = _fixture.Create<UpdateProductDto>();
+        _context.Products.AddRange(_mapper.Map<Domain.Entities.Product>(updateProductDto));
+        _context.SaveChanges();
 
         //Act
-        var result = _services.DeleteProduct(mockData.Id);
+        var result = _services.DeleteProduct(updateProductDto.Id);
 
         //Assert
         Assert.True(result);
@@ -109,13 +114,15 @@ public class TestProductServices : IDisposable
     public void Update_ShouldUpdateProduct_WhenIdFound()
     {
         //Arrange
-        var mockData = ProductMockData.GetProducts();
-        _applicationDb.Products.AddRange(_mapper.Map<List<Domain.Entities.Product>>(mockData));
-        _applicationDb.SaveChanges();
-        var newData = ProductMockData.UpdateProduct();
+        var detailedProductDtoList = _fixture.CreateMany<DetailedProductDto>(3).ToList();
+        _context.Products.AddRange(_mapper.Map<List<Domain.Entities.Product>>(detailedProductDtoList));
+        _context.SaveChanges();
+
+        var updateProductDto = _fixture.Create<UpdateProductDto>();
+        updateProductDto.Id = detailedProductDtoList.First().Id;
 
         //Act
-        var result = _services.UpdateProduct(newData);
+        var result = _services.UpdateProduct(updateProductDto);
 
         //Assert
         Assert.True(result);
@@ -124,7 +131,7 @@ public class TestProductServices : IDisposable
 
     public void Dispose()
     {
-        _applicationDb.Database.EnsureCreated();
-        _applicationDb.Dispose();
+        _context.Database.EnsureCreated();
+        _context.Dispose();
     }
 }
