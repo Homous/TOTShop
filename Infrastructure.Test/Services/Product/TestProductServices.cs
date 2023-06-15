@@ -15,7 +15,7 @@ public class TestProductServices : IDisposable
     private readonly ApplicationDbContext _context;
     private readonly Mapper _mapper;
     private readonly IProductServices _services;
-    private Fixture _fixture;
+    private readonly Fixture _fixture;
 
     public TestProductServices()
     {
