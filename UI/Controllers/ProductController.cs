@@ -11,11 +11,11 @@ namespace UI.Controllers;
 
 public class ProductController : ControllerBase
 {
-    private readonly IProductServices productServices;
+    private readonly IProductServices _productServices;
 
     public ProductController(IProductServices productServices)
     {
-        this.productServices = productServices;
+        _productServices = productServices;
     }
 
     [HttpGet]
@@ -23,7 +23,7 @@ public class ProductController : ControllerBase
     {
         try
         {
-            var products = productServices.MiniDetailsProducts(filter);
+            var products = _productServices.MiniDetailsProducts(filter);
             return Ok(new PagedResponse<List<MiniProductDto>>(products, filter.PageNumber, filter.PageSize));
         }
         catch
@@ -36,12 +36,12 @@ public class ProductController : ControllerBase
         }
     }
 
-    [HttpGet("ProudactById")]
-    public IActionResult ProudactById(int? id)
+    [HttpGet("{id}")]
+    public IActionResult ProductById(int id)
     {
         try
         {
-            var product = productServices.GetProductById(id);
+            var product = _productServices.GetProductById(id);
             if (product == null)
             {
                 return NotFound(new ResultModel()
@@ -64,12 +64,12 @@ public class ProductController : ControllerBase
 
     }
 
-    [HttpGet("FilteringData")]
+    [HttpGet("filter/{search}")]
     public IActionResult FilteringData(string? search, [FromQuery] PaginationFilter filter)
     {
         try
         {
-            var products = productServices.FilteringData(search, filter);
+            var products = _productServices.FilteringData(search, filter);
 
             if (products != null)
             {
@@ -97,7 +97,7 @@ public class ProductController : ControllerBase
     {
         try
         {
-            productServices.AddProduct(addProduct);
+            _productServices.AddProduct(addProduct);
             return Ok(new ResultModel("", true, addProduct));
         }
         catch
@@ -116,7 +116,7 @@ public class ProductController : ControllerBase
     {
         try
         {
-            productServices.UpdateProduct(updateProductDto);
+            _productServices.UpdateProduct(updateProductDto);
             return Ok(new ResultModel("", true, updateProductDto));
         }
         catch
@@ -134,7 +134,7 @@ public class ProductController : ControllerBase
     {
         try
         {
-            var deleteProduct = productServices.DeleteProduct(id);
+            var deleteProduct = _productServices.DeleteProduct(id);
             if (deleteProduct != false)
             {
                 return Ok(new ResultModel()

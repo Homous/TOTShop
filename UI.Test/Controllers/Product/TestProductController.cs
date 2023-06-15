@@ -56,7 +56,7 @@ public class TestProductController
         var productMock = new ProductController(_moqServices.Object);
 
         //Act
-        var result = productMock.ProudactById(productId);
+        var result = productMock.ProductById(productId);
 
         //Assert
         Assert.IsType<OkObjectResult>(result);
@@ -72,7 +72,7 @@ public class TestProductController
         var productMock = new ProductController(_moqServices.Object);
 
         //Act
-        var result = productMock.ProudactById(5);
+        var result = productMock.ProductById(5);
 
         //Assert
         Assert.IsType<NotFoundObjectResult>(result);
@@ -87,7 +87,7 @@ public class TestProductController
         var productMock = new ProductController(_moqServices.Object);
 
         //Act
-        var result = productMock.ProudactById(productId);
+        var result = productMock.ProductById(productId);
 
         //Assert
         Assert.IsType<BadRequestObjectResult>(result);
