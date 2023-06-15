@@ -7,7 +7,6 @@ using AutoMapper;
 using FluentAssertions;
 using Infrastructure.DB;
 using Infrastructure.Services.ShoppingCartServices;
-using Infrastructure.Test.Services.ShoppingCartTest;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Services.Common;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -44,7 +43,7 @@ public class TestShoppingCartServices : IDisposable
     }
 
     [Fact]
-    public async Task GetShoppingCarts_ShouldReturnShoppingCartList()
+    public async Task GetShoppingCarts_WhereDataIsExists__ShouldReturnShoppingCartList()
     {
         var detailedShoppingCartDto = _fixture.CreateMany<DetailedShoppingCartDto>(3).ToList();
         var mapData = _mapper.Map<List<Domain.Entities.ShoppingCart>>(detailedShoppingCartDto);
@@ -59,7 +58,7 @@ public class TestShoppingCartServices : IDisposable
     }
 
     [Fact]
-    public async Task GetShoppingCartById_ShouldReturnShoppingCartObject()
+    public async Task GetShoppingCartById_WhereObjectIsExists__ShouldReturnShoppingCartObject()
     {
         var detailedShoppingCartDto = _fixture.Create<DetailedShoppingCartDto>();
         var mapData = _mapper.Map<Domain.Entities.ShoppingCart>(detailedShoppingCartDto);
@@ -75,32 +74,34 @@ public class TestShoppingCartServices : IDisposable
     }
 
     [Fact]
-    public void EditShoppingCart_ShouldUpdateDetailedShoppingCartDto()
+    public void EditShoppingCart_WhereObjectIsExists__ShouldUpdateDetailedShoppingCartDto()
     {
         var editShoppingCartDto = _fixture.Create<DetailedShoppingCartDto>();
         var mapData = _mapper.Map<Domain.Entities.ShoppingCart>(editShoppingCartDto);
        _context.ShoppingCarts.AddRange(mapData);
         _context.SaveChanges();
 
-        //var editedData = ShoppingCartMockData.GetDetailedShoppingCartDto();
 
         /// Act
+        editShoppingCartDto.TotalCost = 20;
         _services.EditShoppingCart(editShoppingCartDto);
 
         /// Assert
         var shoppingCart = _context.ShoppingCarts.FirstOrDefault(x => x.Id == editShoppingCartDto.Id);
         shoppingCart.Should().NotBeNull();
         shoppingCart.TotalCost.Should().Be(editShoppingCartDto.TotalCost);
+        var item = editShoppingCartDto.ShoppingCartItems.First();
         shoppingCart.ShoppingCartItems.Count.Should().Be(editShoppingCartDto.ShoppingCartItems.Count);
         if (editShoppingCartDto.ShoppingCartItems.Count > 0)
         {
-            shoppingCart.ShoppingCartItems.FirstOrDefault(x => x.Id == 1).TotalCost
-            .Should().Be(editShoppingCartDto.ShoppingCartItems.FirstOrDefault(x => x.Id == 1).TotalCost);
+            
+            shoppingCart.ShoppingCartItems.FirstOrDefault(x => x.Id == item.Id).TotalCost
+            .Should().Be(editShoppingCartDto.ShoppingCartItems.FirstOrDefault(x => x.Id == item.Id).TotalCost);
         }
     }
 
     [Fact]
-    public async Task AddShoppingCart_ShouldReturnShoppingCartAddedId()
+    public async Task AddShoppingCart_WhereObjectIsExists__ShouldReturnShoppingCartAddedId()
     {
         var shoppingCartDto = _fixture.Create<ShoppingCartDto>();
         var mapData = _mapper.Map<Domain.Entities.ShoppingCart>(shoppingCartDto);
@@ -114,18 +115,18 @@ public class TestShoppingCartServices : IDisposable
     }
 
     [Fact]
-    public async Task DeleteShoppingCart_ShouldDeleteObjectFromContext()
+    public async Task DeleteShoppingCart_WhereObjectIsExists_ShouldDeleteObjectFromContext()
     {
-        var detailedShoppingCartDtoList = _fixture.Create<DetailedShoppingCartDto>();
-        var mapData = _mapper.Map<Domain.Entities.ShoppingCart>(detailedShoppingCartDtoList);
+        var detailedShoppingCartDto = _fixture.Create<DetailedShoppingCartDto>();
+        var mapData = _mapper.Map<Domain.Entities.ShoppingCart>(detailedShoppingCartDto);
         _context.ShoppingCarts.AddRange(mapData);
         _context.SaveChanges();
 
         /// Act
-          _services.DeleteShoppingCart(1);
+          _services.DeleteShoppingCart(detailedShoppingCartDto.Id);
 
         /// Assert
-        _context.ShoppingCarts.Count().Should().Be(1);
+        _context.ShoppingCarts.Count().Should().Be(0);
     }
 
     public void Dispose()

@@ -19,7 +19,7 @@ public class TestShoppingCartController
         _controller = new ShoppingCartController(_shoppingCartServicesMock.Object);
     }
     [Fact]
-    public async void Get_ShouldReturn200Status()
+    public async void Get_WhereDataIsExists_ShouldReturn200Status()
     {
         // Arrange
         var detailedShoppingCartDtoList = _fixture.CreateMany<DetailedShoppingCartDto>(3).ToList();
@@ -41,7 +41,7 @@ public class TestShoppingCartController
 
 
     [Fact]
-    public async void GetItem_ShouldReturn200Status()
+    public async void GetItem_WhereObjectIsExists_ShouldReturn200Status()
     {
         // Arrange
         var detailedShoppingCartDto = _fixture.Create<DetailedShoppingCartDto>();
@@ -62,7 +62,7 @@ public class TestShoppingCartController
     }
 
     [Fact]
-    public async Task Add_ShouldReturn200Status()
+    public async Task Add_WhereObjectIsExists_ShouldReturn200Status()
     {
         // Arrange
         var shoppingCartDto = _fixture.Create<ShoppingCartDto>();
@@ -80,7 +80,7 @@ public class TestShoppingCartController
     }
 
     [Fact]
-    public async Task Delete_ShouldReturn200Status()
+    public async Task Delete_WhereObjectIsExists_ShouldReturn200Status()
     {
         // Arrange
         var shoppingCartDto = _fixture.Create<ShoppingCartDto>();
