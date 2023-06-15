@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Test", "Infr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI.Test", "UI.Test\UI.Test.csproj", "{5450A459-1061-4E18-A371-5E0F15E15863}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{120DAC51-FBE7-49E6-AEBD-D6349AAD8757}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{120DAC51-FBE7-49E6-AEBD-D6349AAD8757}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
