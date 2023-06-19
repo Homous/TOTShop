@@ -23,7 +23,9 @@ public class ProductController : ControllerBase
     {
         try
         {
+
             var products = _productServices.MiniDetailsProducts(filter);
+            
             return Ok(new PagedResponse<List<MiniProductDto>>(products, filter.PageNumber, filter.PageSize));
         }
         catch

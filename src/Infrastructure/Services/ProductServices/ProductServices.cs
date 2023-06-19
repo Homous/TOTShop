@@ -5,6 +5,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Entities;
 using Infrastructure.DB;
+using Microsoft.Azure.Pipelines.WebApi;
 
 namespace Infrastructure.Services.ProductServices;
 public class ProductServices : IProductServices
@@ -21,6 +22,7 @@ public class ProductServices : IProductServices
 	{
 		if (addProductDto != null)
 		{
+			
 			var map = _mapper.Map<Product>(addProductDto);
 			_context.Products.Add(map);
 			_context.SaveChanges();

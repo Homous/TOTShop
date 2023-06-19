@@ -7,8 +7,10 @@ using Serilog;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
-    .WriteTo.Console()
-    .WriteTo.File("D:\\ToT\\ToTShop\\src\\Application\\Log\\log.txt")
+    .WriteTo.Console(outputTemplate:
+        "[{Timestamp:HH:mm:ss}{Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .WriteTo.File("D:\\ToT\\ToTShop\\src\\Application\\Log\\log.txt", outputTemplate:
+        "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
     .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
