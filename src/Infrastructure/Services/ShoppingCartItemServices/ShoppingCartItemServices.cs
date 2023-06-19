@@ -61,14 +61,9 @@ namespace Infrastructure.Services.ShoppingCartItemItemServices
         public DetailedShoppingCartItemDto GetShoppingCartItem(int id)
         {
             return _mapper.ProjectTo<DetailedShoppingCartItemDto>(_context.ShoppingCartItems).FirstOrDefault(x => x.Id == id);
-            //var cart = _context.ShoppingCartItems.FirstOrDefault(x => x.Id == id);
-            //return _mapper.Map<ShoppingCartItemDto>(cart);
         }
         public List<DetailedShoppingCartItemDto> GetShoppingCartItems()
         {
-            // var CartItems = _context.ShoppingCartItems.ToList();
-            // return _mapper.Map<List<ShoppingCartItemDto>>(CartItems);
-
             return _mapper.ProjectTo<DetailedShoppingCartItemDto>(_context.ShoppingCartItems).ToList();
         }
 

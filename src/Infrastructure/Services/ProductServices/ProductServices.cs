@@ -70,8 +70,6 @@ public class ProductServices : IProductServices
 		.ProjectTo<MiniProductDto>(_mapper.ConfigurationProvider);
 		var getList = getProducts.ToList();
 		return getList;
-		// TODO: Remove unused code
-		//return PagedResponse<List<MiniProductDto>>(getList, filter.PageNumber, filter.PageSize);
 	}
 
 	public bool UpdateProduct(UpdateProductDto updateProductDto)
