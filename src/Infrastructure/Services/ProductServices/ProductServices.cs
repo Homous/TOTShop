@@ -15,7 +15,7 @@ public class ProductServices : IProductServices
 	public ProductServices(ApplicationDbContext db, IMapper mapper)
 	{
 		_context = db;
-		_mapper = mapper;
+		_mapper = mapper; 
 	}
 	public bool AddProduct(AddProductDto addProductDto)
 	{

@@ -33,8 +33,6 @@ public class ShoppingCartServices : IShoppingCartServices
 		catch (Exception ex)
 		{
 
-
-			// TODO: Use SiriLOG
 			Console.WriteLine($"AddingShoppingCart has failed {ex.Message}");
 			Console.WriteLine(ex);
 			return -1;
