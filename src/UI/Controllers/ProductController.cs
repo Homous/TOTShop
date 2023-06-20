@@ -31,7 +31,7 @@ public class ProductController : ControllerBase
         }
         catch (Exception ex)
         {
-            Log.Error(ex.Message, ex);
+            Log.Error(ex.ToString());
             Log.Error("HttpGet with action:MiniDetailsProducts return: BadRequest");
 
             return BadRequest(new ResultModel()
@@ -63,7 +63,7 @@ public class ProductController : ControllerBase
 
         catch (Exception ex)
         {
-            Log.Error(ex.Message, ex);
+            Log.Error(ex.ToString());
             Log.Error($"HttpGet/{id} with action:ProductById return: BadRequest");
 
             return BadRequest(new ResultModel()
@@ -98,7 +98,7 @@ public class ProductController : ControllerBase
         }
         catch (Exception ex)
         {
-            Log.Error(ex.Message, ex);
+            Log.Error(ex.ToString());
             Log.Error($"HttpGet/filter/{search} with action:FilteringData return: BadRequest");
 
             return BadRequest(new ResultModel()
@@ -121,7 +121,7 @@ public class ProductController : ControllerBase
         }
         catch (Exception ex)
         {
-            Log.Error(ex.Message, ex);
+            Log.Error(ex.ToString());
             Log.Error("HttpPost with action:UpdateProduct return: BadRequest");
 
             return BadRequest(new ResultModel()
@@ -145,7 +145,7 @@ public class ProductController : ControllerBase
         }
         catch (Exception ex)
         {
-            Log.Error(ex.Message, ex);
+            Log.Error(ex.ToString());
             Log.Error("HttpPut with action:UpdateProduct return: BadRequest");
             return BadRequest(new ResultModel()
             {
@@ -181,7 +181,7 @@ public class ProductController : ControllerBase
         }
         catch (Exception ex)
         {
-            Log.Error(ex.Message, ex);
+            Log.Error(ex.ToString());
             Log.Error("HttpDelete with action:DeleteProduct return: BadRequest");
 
             return BadRequest(new ResultModel()

@@ -38,7 +38,7 @@ public class ProductServices : IProductServices
         }
         catch (Exception ex)
         {
-            Log.Error(ex.Message, ex);
+            Log.Error(ex.ToString());
             return false;
         }
     }
@@ -65,7 +65,7 @@ public class ProductServices : IProductServices
         }
         catch (Exception ex)
         {
-            Log.Error(ex.Message, ex);
+            Log.Error(ex.ToString());
             return false;
         }
     }
@@ -91,7 +91,7 @@ public class ProductServices : IProductServices
         }
         catch (Exception ex)
         {
-            Log.Error(ex.Message, ex);
+            Log.Error(ex.ToString());
             return null;
         }
     }
@@ -118,7 +118,7 @@ public class ProductServices : IProductServices
         }
         catch (Exception ex)
         {
-            Log.Error(ex.Message, ex);
+            Log.Error(ex.ToString());
             return null;
         }
 
@@ -148,7 +148,7 @@ public class ProductServices : IProductServices
         }
         catch (Exception ex)
         {
-            Log.Error(ex.Message, ex);
+            Log.Error(ex.ToString());
             return null;
         }
     }
@@ -179,7 +179,7 @@ public class ProductServices : IProductServices
         }
         catch (Exception ex)
         {
-            Log.Error(ex.Message, ex);
+            Log.Error(ex.ToString());
             return false;
         }
     }
