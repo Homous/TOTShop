@@ -20,4 +20,9 @@ public class Product : BaseEntity
     public string ImageUrl { get; set; }
     //public ICollection<ShoppingCart> ShoppingCarts { get; set; }
     public ICollection<ShoppingCartItem> ShoppingCartItems { get; set; }
+
+    public override string ToString()
+    {
+        return $"Id: {Id},  Name: {Name}, Price: {Price}, Description: {Description}, Quantity: {Quantity}, ImageUrl: {ImageUrl}";
+    }
 }
