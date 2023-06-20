@@ -1,6 +1,8 @@
 ﻿using Application.Contracts;
 using Application.Dtos.ShoppingCart;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using UI.ActionResults;
 
 //
@@ -23,6 +25,7 @@ public class ShoppingCartController : ControllerBase
         try
         {
             var shoppingCarts = _shoppingCartServices.GetShoppingCarts();
+            Log.Information($"returned shoppingCarts list count {shoppingCarts.Count}");
             return Ok(new ActionResultModel()
             {
                 Message = shoppingCarts != null ? "Shopping carts returned successfully" : "No data exists",
@@ -32,6 +35,7 @@ public class ShoppingCartController : ControllerBase
         }
         catch (Exception ex)
         {
+            Log.Error(ex.Message, ex);
             return BadRequest(new ActionResultModel()
             {
                 Message = $"Error {ex.Message}",
@@ -47,6 +51,7 @@ public class ShoppingCartController : ControllerBase
         try
         {
             var shoppingCart = _shoppingCartServices.GetShoppingCart(id);
+            Log.Information($"return shopping cart id = {id}");
             return Ok(new ActionResultModel()
             {
                 Message = shoppingCart != null ? "Shopping cart returned successfully" : "No data exists",
@@ -56,6 +61,7 @@ public class ShoppingCartController : ControllerBase
         }
         catch (Exception ex)
         {
+            Log.Error(ex.Message, ex);
             return BadRequest(new ActionResultModel()
             {
                 Message = $"Error {ex.Message}",
@@ -70,6 +76,7 @@ public class ShoppingCartController : ControllerBase
     {
         try
         {
+            Log.Information($"add shoppingCart with data = {item}");
             var id = _shoppingCartServices.AddShoppingCart(item);
             return Ok(new ActionResultModel()
             {
@@ -80,6 +87,7 @@ public class ShoppingCartController : ControllerBase
         }
         catch (Exception ex)
         {
+            Log.Error(ex.Message, ex);
             return BadRequest(new ActionResultModel()
             {
                 Message = $"Error {ex.Message}",
@@ -94,6 +102,7 @@ public class ShoppingCartController : ControllerBase
     {
         try
         {
+            Log.Information($"Delete ShoppingCart with id = {id}");
             _shoppingCartServices.DeleteShoppingCart(id);
             return Ok(new ActionResultModel()
             {
@@ -104,6 +113,7 @@ public class ShoppingCartController : ControllerBase
         }
         catch (Exception ex)
         {
+            Log.Error(ex.Message, ex);
             return BadRequest(new ActionResultModel()
             {
                 Message = $"Error {ex.Message}",
@@ -146,6 +156,7 @@ public class ShoppingCartController : ControllerBase
     {
         try
         {
+            Log.Information($"add item = {item} to ShoppingCart id = {id}");
             if (id != item.Id)
                 return BadRequest("Ids not matching");
 
@@ -159,6 +170,7 @@ public class ShoppingCartController : ControllerBase
         }
         catch (Exception ex)
         {
+            Log.Error(ex.Message, ex);
             return BadRequest(new ActionResultModel()
             {
                 Message = $"Error {ex.Message}",

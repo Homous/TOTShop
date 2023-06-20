@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Entities;
 using Infrastructure.DB;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace Infrastructure.Services.ShoppingCartServices;
 
@@ -22,6 +23,7 @@ public class ShoppingCartServices : IShoppingCartServices
 	{
 		try
 		{
+
 			var cart = _mapper.Map<ShoppingCart>(item);
 
 			_context.ShoppingCarts.Add(cart);
@@ -33,9 +35,8 @@ public class ShoppingCartServices : IShoppingCartServices
 		catch (Exception ex)
 		{
 
-			Console.WriteLine($"AddingShoppingCart has failed {ex.Message}");
-			Console.WriteLine(ex);
-			return -1;
+            Log.Error(ex.Message, ex);
+            return -1;
 		}
 	}
 
@@ -50,9 +51,8 @@ public class ShoppingCartServices : IShoppingCartServices
 		}
 		catch (Exception ex)
 		{
-			Console.WriteLine($"DeleteShoppingCart has failed {ex.Message}");
-			Console.WriteLine(ex);
-		}
+            Log.Error(ex.Message, ex);
+        }
 	}
 
 
@@ -72,8 +72,7 @@ public class ShoppingCartServices : IShoppingCartServices
 		}
 		catch (Exception ex)
 		{
-			Console.WriteLine($"EditShoppingCart has failed {ex.Message}");
-			Console.WriteLine(ex);
+			Log.Error(ex.Message,ex);
 		}
 	}
 
@@ -121,10 +120,8 @@ public class ShoppingCartServices : IShoppingCartServices
 		}
 		catch (Exception ex)
 		{
-			Console.WriteLine($"EditShoppingCart has failed {ex.Message}");
-			Console.WriteLine(ex);
-			throw ex;
-		}
+            Log.Error(ex.Message, ex);
+        }
 	}
 
 	public DetailedShoppingCartDto GetShoppingCart(int id)
@@ -135,9 +132,8 @@ public class ShoppingCartServices : IShoppingCartServices
 		}
 		catch (Exception ex)
 		{
-			Console.WriteLine($"GetShoppingCart has failed {ex.Message}");
-			Console.WriteLine(ex);
-			return null;
+            Log.Error(ex.Message, ex);
+            return null;
 		}
 	}
 
@@ -149,9 +145,8 @@ public class ShoppingCartServices : IShoppingCartServices
 		}
 		catch (Exception ex)
 		{
-			Console.WriteLine($"GetShoppingCarts has failed {ex.Message}");
-			Console.WriteLine(ex);
-			return null;
+            Log.Error(ex.Message, ex);
+            return null;
 		}
 	}
 
