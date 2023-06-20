@@ -17,4 +17,9 @@ public class AddProductDto
     [Required]
     [MaxLength(255)]
     public string ImageUrl { get; set; }
+
+    public override string ToString()
+    {
+        return $"Name: {Name}, Price: {Price}, Description: {Description}, Quantity: {Quantity}, ImageUrl: {ImageUrl}";
+    }
 }

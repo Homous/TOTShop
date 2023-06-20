@@ -1,23 +1,24 @@
 using Application;
-using Application.Logging;
 using Infrastructure;
-using MediatR;
 using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-var logger = new LoggerConfiguration()
+try
+{
+    Log.Information("Starting web application");
+
+    var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
     .CreateLogger();
-try
-{
 
-    logger.Information("Starting web application");
-
+    builder.Logging.ClearProviders();
     builder.Host.UseSerilog(logger);
+    //builder.Logging.AddSerilog(logger);
 
+    Log.Logger = logger;
     // Add services to the container.
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
@@ -29,9 +30,10 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-    builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
-    builder.Services.AddScoped(typeof(IPipelineBehavior<,>),
-        typeof(SerilogBehavior<,>));
+    /* builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+     builder.Services.AddScoped(typeof(IPipelineBehavior<,>),
+         typeof(SerilogBehavior<,>));*/
+
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
@@ -51,7 +53,7 @@ try
 }
 catch (Exception ex)
 {
-    logger.Fatal(ex, "An exception has occured");
+    Log.Fatal(ex, "An exception has occured");
 }
 finally
 {

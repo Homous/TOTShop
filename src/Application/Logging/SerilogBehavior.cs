@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿/*using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Logging;
@@ -26,3 +26,4 @@ public class SerilogBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         return result;
     }
 }
+*/

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.Wrappers;
+﻿namespace Application.Wrappers;
 
 public class PaginationFilter
 {
@@ -21,4 +15,8 @@ public class PaginationFilter
         this.PageSize = pageSize > 10 ? 10 : pageSize;
     }
 
+    public override string ToString()
+    {
+        return ($"PageNumber: {PageNumber}, PageSize: {PageSize}");
+    }
 }
