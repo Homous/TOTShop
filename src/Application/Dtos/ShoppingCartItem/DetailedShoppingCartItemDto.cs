@@ -11,4 +11,9 @@ public class DetailedShoppingCartItemDto
     public int ProductId { get; set; }
     public DetailedProductDto Product { get; set; }
 
+    public override string ToString()
+    {
+        return $"DetailedShoppingCartItemDto - Id: {Id} - TotalCost: {TotalCost} - Count: {Count} - ProductId: {ProductId} - ProductPrice: {Product.Price}";
+    }
+
 }

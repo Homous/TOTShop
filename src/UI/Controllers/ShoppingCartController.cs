@@ -1,6 +1,5 @@
 ﻿using Application.Contracts;
 using Application.Dtos.ShoppingCart;
-using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using UI.ActionResults;
@@ -47,7 +46,7 @@ public class ShoppingCartController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetItem(int id)
+    public IActionResult GetItemById(int id)
     {
         try
         {
@@ -77,9 +76,18 @@ public class ShoppingCartController : ControllerBase
     {
         try
         {
-            
-            Log.Information($"add shoppingCart with data = {item}");
             var id = _shoppingCartServices.AddShoppingCart(item);
+            if (id == -1)
+            {
+                Log.Error("HttpPost with action:Add return: BadRequest");
+                return BadRequest(new ActionResultModel()
+                {
+                    Message = $"Data is not valid",
+                    Status = false,
+                    Data = ""
+                });
+            }
+
             Log.Information("HttpPost with action:Add return: OK");
             return Ok(new ActionResultModel()
             {
@@ -100,7 +108,7 @@ public class ShoppingCartController : ControllerBase
         }
     }
 
-    [HttpDelete("Delete")]
+    [HttpDelete("{id}")]
     public ActionResult Delete(int id)
     {
         try
@@ -130,24 +138,31 @@ public class ShoppingCartController : ControllerBase
 
 
     [HttpPut("{id}")]
-    public ActionResult AddShoppingCartItemOnShoppingCart(int id, [FromBody] DetailedShoppingCartDto item)
+    public ActionResult AddShoppingCartItemOnShoppingCart(int id, [FromBody] DetailedShoppingCartDto cartDto)
     {
         try
         {
-            Log.Information($"add item = {item} to ShoppingCart id = {id}");
-            if (id != item.Id)
+            if (id != cartDto.Id)
             {
                 Log.Information("HttpPut with action:AddShoppingCartItemOnShoppingCart return:BadRequest");
                 return BadRequest("Ids not matching");
             }
-            _shoppingCartServices.EditShoppingCart(item);
-            Log.Information("HttpPut with action:AddShoppingCartItemOnShoppingCart return:Ok");
-            return Ok(new ActionResultModel()
+            var confirmEditTransaction = _shoppingCartServices.EditShoppingCart(cartDto);
+
+            if (confirmEditTransaction)
             {
-                Message = $"Shopping cart updated with Id {item.Id}",
-                Status = true,
-                Data = item
-            });
+                var editedCart = _shoppingCartServices.GetShoppingCart(id);
+                Log.Information("HttpPut with action:AddShoppingCartItemOnShoppingCart return:Ok");
+                return Ok(new ActionResultModel()
+                {
+                    Message = $"Shopping cart updated with Id {id}",
+                    Status = true,
+                    Data = editedCart
+                });
+            }
+
+            Log.Information("HttpPut with action:AddShoppingCartItemOnShoppingCart return:BadRequest");
+            return BadRequest(new ActionResultModel() { Data = cartDto, Message = "Data is not valid", Status = false });
         }
         catch (Exception ex)
         {
@@ -156,7 +171,7 @@ public class ShoppingCartController : ControllerBase
             {
                 Message = $"Error ",
                 Status = false,
-                Data = item
+                Data = cartDto
             });
         }
     }
