@@ -51,7 +51,7 @@ public class ShoppingCartItemsController : ControllerBase
         }
     }
 
-    [HttpPost]
+    [HttpPost("Add")]
     public ActionResult Add([FromBody] ShoppingCartItemDto item)
     {
         try

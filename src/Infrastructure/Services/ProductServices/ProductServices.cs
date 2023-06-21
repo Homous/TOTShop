@@ -1,10 +1,10 @@
 ﻿using Application.Contracts.ProuductServices;
 using Application.Dtos.ProductDtos;
 using Application.Wrappers;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Domain.Entities;
 using Infrastructure.DB;
+using Mapster;
+using MapsterMapper;
 using Serilog;
 
 namespace Infrastructure.Services.ProductServices;
@@ -108,7 +108,7 @@ public class ProductServices : IProductServices
             var getProducts = _context.Products.Skip((pagination.PageNumber - 1) * pagination.PageSize)
                 .Take(pagination.PageSize)
                 .Where(n => n.Name.Contains(data) || n.Description.Contains(data))
-                .ProjectTo<MiniProductDto>(_mapper.ConfigurationProvider);
+                .ProjectToType<MiniProductDto>();
 
             var productList = getProducts.ToList();
             Log.Information($"returned with product list count: {productList.Count}");
@@ -134,7 +134,7 @@ public class ProductServices : IProductServices
             var pagination = new PaginationFilter(filter.PageNumber, filter.PageSize);
             var getProducts = _context.Products.Skip((pagination.PageNumber - 1) * pagination.PageSize)
             .Take(pagination.PageSize)
-            .ProjectTo<MiniProductDto>(_mapper.ConfigurationProvider);
+            .ProjectToType<MiniProductDto>();
             var productlist = getProducts.ToList();
 
             if (productlist == null)

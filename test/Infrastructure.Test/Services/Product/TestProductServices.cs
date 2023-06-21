@@ -1,11 +1,12 @@
 ﻿using Application.Contracts.ProuductServices;
 using Application.Dtos.ProductDtos;
-using Application.Mapping;
+using Application.Mapster;
 using Application.Wrappers;
 using AutoFixture;
-using AutoMapper;
 using Infrastructure.DB;
 using Infrastructure.Services.ProductServices;
+using Mapster;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Test.Services.Product;
@@ -13,7 +14,7 @@ namespace Infrastructure.Test.Services.Product;
 public class TestProductServices : IDisposable
 {
     private readonly ApplicationDbContext _context;
-    private readonly Mapper _mapper;
+    private readonly IMapper _mapper;
     private readonly IProductServices _services;
     private readonly Fixture _fixture;
 
@@ -24,13 +25,8 @@ public class TestProductServices : IDisposable
         _context = new ApplicationDbContext(options);
         _context.Database.EnsureCreated();
 
-        var mockAutoMapper = new MapperConfiguration(mc =>
-        {
-            mc.AddProfile(new ProductProfile());
-        }).CreateMapper().ConfigurationProvider;
-
-        _mapper = new Mapper(mockAutoMapper);
-        _services = new ProductServices(_context, _mapper);
+        _mapper = new Mapper();
+        _services = new ProductServices(_context, AddMapsterForUnitTests.GetMapper());
         _fixture = new Fixture();
     }
 
@@ -133,5 +129,14 @@ public class TestProductServices : IDisposable
     {
         _context.Database.EnsureCreated();
         _context.Dispose();
+    }
+}
+public static class AddMapsterForUnitTests
+{
+    public static Mapper GetMapper()
+    {
+        var config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(typeof(ProductConfig).Assembly);
+        return new Mapper(config);
     }
 }

@@ -34,7 +34,7 @@ public class TestShoppingCartServices : IDisposable
         {
             mc.AddProfile(new ShoppingCartProfile());
             mc.AddProfile(new ShoppingCartItemProfile());
-            mc.AddProfile(new ProductProfile());
+            //mc.AddProfile(new ProductProfile());
         }).CreateMapper().ConfigurationProvider;
         _fixture = new Fixture();
         _mapper = new Mapper(mockAutoMapper);
