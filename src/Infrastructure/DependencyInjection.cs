@@ -2,7 +2,6 @@
 using Application.Contracts.ProuductServices;
 using Infrastructure.DB;
 using Infrastructure.Services.ProductServices;
-using Infrastructure.Services.ShoppingCartItemItemServices;
 using Infrastructure.Services.ShoppingCartServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +16,6 @@ namespace Infrastructure
             var defaultConnectionString = configuration.GetConnectionString("ToTShop");
             services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(defaultConnectionString));
-            services.AddScoped<IShoppingCartItemServices, ShoppingCartItemServices>();
             services.AddScoped<IShoppingCartServices, ShoppingCartServices>();
             services.AddScoped<IProductServices, ProductServices>();
 

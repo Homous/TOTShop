@@ -24,7 +24,7 @@ public class TestShoppingCartController
         // Arrange
         var detailedShoppingCartDtoList = _fixture.CreateMany<DetailedShoppingCartDto>(3).ToList();
         _shoppingCartServicesMock.Setup(_ => _.GetShoppingCarts()).Returns(detailedShoppingCartDtoList);
-        
+
 
         // Act
         var result = _controller.Get();
@@ -49,7 +49,7 @@ public class TestShoppingCartController
 
 
         // Act            
-        var result = _controller.GetItem(1);
+        var result = _controller.GetItemById(1);
         var obj = result as ObjectResult;
         var actual = obj.Value as ActionResultModel;
 

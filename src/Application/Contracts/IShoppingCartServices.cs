@@ -1,5 +1,4 @@
 ﻿using Application.Dtos.ShoppingCart;
-using Application.Dtos.ShoppingCartItem;
 
 namespace Application.Contracts;
 
@@ -9,6 +8,5 @@ public interface IShoppingCartServices
     public DetailedShoppingCartDto GetShoppingCart(int id);
     public int AddShoppingCart(ShoppingCartDto item);
     public void DeleteShoppingCart(int id);
-    public void EditShoppingCart(EditShoppingCartItemDto shoppingCartDto);
-    public void EditShoppingCart(DetailedShoppingCartDto shoppingCartDto);
+    public bool EditShoppingCart(DetailedShoppingCartDto shoppingCartDto);
 }
