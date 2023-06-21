@@ -1,8 +1,9 @@
 ﻿using Application.Contracts;
 using Application.Dtos.ShoppingCart;
-using AutoMapper;
 using Domain.Entities;
 using Infrastructure.DB;
+using Mapster;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -156,7 +157,7 @@ public class ShoppingCartServices : IShoppingCartServices
         try
         {
             Log.Information($"request GetShoppingCart id = {id}");
-            var cart = _mapper.ProjectTo<DetailedShoppingCartDto>(_context.ShoppingCarts).FirstOrDefault(x => x.Id == id);
+            var cart = _context.ShoppingCarts.ProjectToType<DetailedShoppingCartDto>().FirstOrDefault(x => x.Id == id);
             if (cart == null)
             {
                 Log.Information($"shoppingCart with id = {id} not founded");
@@ -176,7 +177,7 @@ public class ShoppingCartServices : IShoppingCartServices
         try
         {
             Log.Information($"request GetShoppingCarts");
-            var carts = _mapper.ProjectTo<DetailedShoppingCartDto>(_context.ShoppingCarts).ToList();
+            var carts = _context.ShoppingCarts.ProjectToType<DetailedShoppingCartDto>().ToList();
             if (carts != null)
             {
                 Log.Information($"shoppingCarts returned Count = {carts.Count}");

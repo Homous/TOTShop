@@ -1,12 +1,12 @@
 ﻿using Application.Contracts;
 using Application.Dtos.ShoppingCart;
-using Application.Dtos.ShoppingCartItem;
-using Application.Mapping;
+using Application.Mapster;
 using AutoFixture;
-using AutoMapper;
 using FluentAssertions;
 using Infrastructure.DB;
 using Infrastructure.Services.ShoppingCartServices;
+using Mapster;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Services.Common;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -17,7 +17,7 @@ public class TestShoppingCartServices : IDisposable
 {
     private readonly Fixture _fixture;
     private readonly ApplicationDbContext _context;
-    private readonly Mapper _mapper;
+    private readonly IMapper _mapper;
     private readonly IShoppingCartServices _services;
 
     public TestShoppingCartServices()
@@ -30,15 +30,9 @@ public class TestShoppingCartServices : IDisposable
 
         _context.Database.EnsureCreated();
 
-        var mockAutoMapper = new MapperConfiguration(mc =>
-        {
-            mc.AddProfile(new ShoppingCartProfile());
-            mc.AddProfile(new ShoppingCartItemProfile());
-            //mc.AddProfile(new ProductProfile());
-        }).CreateMapper().ConfigurationProvider;
         _fixture = new Fixture();
-        _mapper = new Mapper(mockAutoMapper);
-        _services = new ShoppingCartServices(_context, _mapper);
+        _mapper = new Mapper();
+        _services = new ShoppingCartServices(_context, AddMapsterForUnitTests.GetMapper());
 
     }
 
@@ -111,7 +105,7 @@ public class TestShoppingCartServices : IDisposable
         var result = _services.AddShoppingCart(shoppingCartDto);
         
         // Assert
-        _context.ShoppingCarts.Count().Should().Be(result);
+        _context.ShoppingCarts.Count().Should().Be(1);
     }
 
     [Fact]
@@ -133,5 +127,17 @@ public class TestShoppingCartServices : IDisposable
     {
         _context.Database.EnsureDeleted();
         _context.Dispose();
+    }
+}
+public static class AddMapsterForUnitTests
+{
+    public static Mapper GetMapper()
+    {
+        var config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(typeof(ShoppingCartConfig).Assembly);
+        config.Scan(typeof(ShoppingCartItermConfig).Assembly);
+        config.Scan(typeof(ProductConfig).Assembly);
+
+        return new Mapper(config);
     }
 }

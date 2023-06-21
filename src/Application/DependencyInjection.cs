@@ -16,7 +16,6 @@ namespace Application
             services.AddSingleton(config);
             services.AddScoped<IMapper,ServiceMapper>();
             services.AddScoped<ModelValidation>();
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             return services;
         }
     }
