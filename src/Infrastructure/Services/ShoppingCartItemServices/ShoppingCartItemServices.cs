@@ -20,7 +20,7 @@ namespace Infrastructure.Services.ShoppingCartItemItemServices
 
         public bool AddListShoppingCartItems(int shoppingCartId, List<ShoppingCartItemDto> items)
         {
-            Log.Information($"request to add item id = {shoppingCartId} and item = {items}");
+            Log.Information($"request AddListShoppingCartItems to add item id = {shoppingCartId} and item = {items}");
             try
             {
                 var cart = _context.ShoppingCarts.Find(shoppingCartId);
@@ -38,7 +38,7 @@ namespace Infrastructure.Services.ShoppingCartItemItemServices
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message, ex);
+                Log.Error(ex.ToString());
                 return false;
             }
         }
@@ -47,7 +47,7 @@ namespace Infrastructure.Services.ShoppingCartItemItemServices
         {
             try
             {
-                Log.Information($"request to add item data = {item}");
+                Log.Information($"request AddShoppingCartItem to add item data = {item}");
                 var CartItem = _mapper.Map<ShoppingCartItem>(item);
                 _context.ShoppingCartItems.Add(CartItem);
                 _context.SaveChanges();
@@ -56,7 +56,7 @@ namespace Infrastructure.Services.ShoppingCartItemItemServices
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message, ex);
+                Log.Error(ex.ToString());
                 return 0;
             }
         }
@@ -65,7 +65,7 @@ namespace Infrastructure.Services.ShoppingCartItemItemServices
         {
             try
             {
-                Log.Information($"request to delete item id = {id}");
+                Log.Information($"request DeleteShoppingCartItem to delete item id = {id}");
                 var CartItem = _context.ShoppingCartItems.Find(id);
                 if (CartItem != null)
                 {
@@ -77,8 +77,8 @@ namespace Infrastructure.Services.ShoppingCartItemItemServices
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message, ex);
-                
+                Log.Error(ex.ToString());
+
             }
         }
 
@@ -86,7 +86,7 @@ namespace Infrastructure.Services.ShoppingCartItemItemServices
         {
             try
             {
-                Log.Information($"request to update item data = {shoppingCartItemDto}");
+                Log.Information($"request EditShoppingCartItem to update item data = {shoppingCartItemDto}");
                 var CartItem = _mapper.Map<ShoppingCartItem>(shoppingCartItemDto);
                 if (CartItem != null)
                 {
@@ -97,7 +97,7 @@ namespace Infrastructure.Services.ShoppingCartItemItemServices
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message, ex);
+                Log.Error(ex.ToString());
 
             }
         }
@@ -105,7 +105,7 @@ namespace Infrastructure.Services.ShoppingCartItemItemServices
         {
             try
             {
-                Log.Information($"request to get item with id = {id}");
+                Log.Information($"request GetShoppingCartItem to get item with id = {id}");
                 var item = _mapper.ProjectTo<DetailedShoppingCartItemDto>(_context.ShoppingCartItems).FirstOrDefault(x => x.Id == id);
                 if (item != null)
                 {
@@ -117,7 +117,7 @@ namespace Infrastructure.Services.ShoppingCartItemItemServices
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message, ex);
+                Log.Error(ex.ToString());
                 return null;
             }
         }
@@ -137,7 +137,7 @@ namespace Infrastructure.Services.ShoppingCartItemItemServices
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message, ex);
+                Log.Error(ex.ToString());
                 return null;
             }
         }

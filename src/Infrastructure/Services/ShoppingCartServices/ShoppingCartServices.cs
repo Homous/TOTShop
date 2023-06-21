@@ -23,13 +23,12 @@ public class ShoppingCartServices : IShoppingCartServices
 	{
 		try
 		{
-
-			var cart = _mapper.Map<ShoppingCart>(item);
-
+            Log.Information($"request AddShoppingCart to add item data = {item}");
+            var cart = _mapper.Map<ShoppingCart>(item);
 			_context.ShoppingCarts.Add(cart);
 			_context.SaveChanges();
-
-			return cart.Id;
+            Log.Information($"cart was added with id  = {cart.Id}");
+            return cart.Id;
 
 		}
 		catch (Exception ex)
@@ -44,14 +43,20 @@ public class ShoppingCartServices : IShoppingCartServices
 	{
 		try
 		{
-			var cart = _context.ShoppingCarts.Find(id);
-			_context.ShoppingCarts.Remove(cart);
-			_context.SaveChanges();
+            Log.Information($"request DeleteShoppingCart to delete id = {id}");
+            var cart = _context.ShoppingCarts.Find(id);
+			if (cart != null)
+			{
 
-		}
+				_context.ShoppingCarts.Remove(cart);
+				_context.SaveChanges();
+                Log.Information($"shoppingCart was deleted id = {id}");
+            }
+            Log.Information($"shoppingCart not founded id = {id}");
+        }
 		catch (Exception ex)
 		{
-            Log.Error(ex.Message, ex);
+            Log.Error(ex.ToString());
         }
 	}
 
@@ -63,17 +68,19 @@ public class ShoppingCartServices : IShoppingCartServices
 		// TODO: Global Exception Handling
 		try
 		{
-			var cart = _mapper.Map<ShoppingCart>(shoppingCartDto);
+            Log.Information($"request EditShoppingCart with data = {shoppingCartDto}");
+            var cart = _mapper.Map<ShoppingCart>(shoppingCartDto);
 			if (cart != null)
 			{
 				_context.ShoppingCarts.Update(cart);
 				_context.SaveChanges();
-			}
+                Log.Information($"shopping cart was updated with data = {shoppingCartDto}");
+            }
 		}
 		catch (Exception ex)
 		{
-			Log.Error(ex.Message,ex);
-		}
+            Log.Error(ex.ToString());
+        }
 	}
 
 	public void EditShoppingCart(DetailedShoppingCartDto shoppingCartDto)
@@ -120,7 +127,7 @@ public class ShoppingCartServices : IShoppingCartServices
 		}
 		catch (Exception ex)
 		{
-            Log.Error(ex.Message, ex);
+            Log.Error(ex.ToString());
         }
 	}
 
@@ -128,11 +135,19 @@ public class ShoppingCartServices : IShoppingCartServices
 	{
 		try
 		{
-			return _mapper.ProjectTo<DetailedShoppingCartDto>(_context.ShoppingCarts).FirstOrDefault(x => x.Id == id);
+            Log.Information($"request GetShoppingCart id = {id}");
+            var cart = _mapper.ProjectTo<DetailedShoppingCartDto>(_context.ShoppingCarts).FirstOrDefault(x => x.Id == id);
+			if(cart == null)
+			{
+                Log.Information($"shoppingCart with id = {id} not founded");
+                return null;
+			}
+            Log.Information($"return shoppingCart with id = {id}");
+            return cart;
 		}
 		catch (Exception ex)
 		{
-            Log.Error(ex.Message, ex);
+            Log.Error(ex.ToString());
             return null;
 		}
 	}
@@ -141,11 +156,18 @@ public class ShoppingCartServices : IShoppingCartServices
 	{
 		try
 		{
-			return _mapper.ProjectTo<DetailedShoppingCartDto>(_context.ShoppingCarts).ToList();
+            Log.Information($"request GetShoppingCarts");
+            var carts =  _mapper.ProjectTo<DetailedShoppingCartDto>(_context.ShoppingCarts).ToList();
+			if(carts != null)
+			{
+                Log.Information($"shoppingCarts returned Count = {carts.Count}");
+                return carts;
+			}
+			return null;
 		}
 		catch (Exception ex)
 		{
-            Log.Error(ex.Message, ex);
+            Log.Error(ex.ToString());
             return null;
 		}
 	}
