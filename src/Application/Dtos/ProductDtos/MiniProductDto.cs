@@ -1,5 +1,4 @@
-﻿//using Domain.Enums;
-
+﻿
 namespace Application.Dtos.ProductDtos;
 
 public class MiniProductDto

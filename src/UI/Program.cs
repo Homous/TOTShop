@@ -16,23 +16,18 @@ try
 
     builder.Logging.ClearProviders();
     builder.Host.UseSerilog(logger);
-    //builder.Logging.AddSerilog(logger);
 
     Log.Logger = logger;
     // Add services to the container.
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
 
-    //builder.Services.AddControllers();
     builder.Services.AddControllers();
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-    /* builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
-     builder.Services.AddScoped(typeof(IPipelineBehavior<,>),
-         typeof(SerilogBehavior<,>));*/
 
     var app = builder.Build();
 

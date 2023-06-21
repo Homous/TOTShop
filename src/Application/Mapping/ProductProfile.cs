@@ -13,7 +13,6 @@ public class ProductProfile : Profile
         CreateMap<DetailedProductDto, Product>();
         CreateMap<UpdateProductDto, Product>();
         CreateMap<AddProductDto, Product>();
-        //CreateMap<MiniProductDto, Product>();
 
 
     }

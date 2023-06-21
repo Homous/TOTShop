@@ -64,8 +64,6 @@ public class ShoppingCartServices : IShoppingCartServices
 	public void EditShoppingCart(EditShoppingCartItemDto shoppingCartDto)
 	{
 
-
-		// TODO: Global Exception Handling
 		try
 		{
             Log.Information($"request EditShoppingCart with data = {shoppingCartDto}");

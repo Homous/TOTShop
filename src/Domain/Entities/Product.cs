@@ -18,7 +18,6 @@ public class Product : BaseEntity
     [Required]
     [MaxLength(255)]
     public string ImageUrl { get; set; }
-    //public ICollection<ShoppingCart> ShoppingCarts { get; set; }
     public ICollection<ShoppingCartItem> ShoppingCartItems { get; set; }
 
     public override string ToString()
