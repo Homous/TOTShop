@@ -26,7 +26,6 @@ public class ProductServices : IProductServices
             Log.Information($"parameters: {addProductDto.ToString()}");
             if (addProductDto != null)
             {
-
                 var newProduct = _mapper.Map<Product>(addProductDto);
                 _context.Products.Add(newProduct);
                 _context.SaveChanges();

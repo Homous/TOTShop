@@ -28,13 +28,13 @@ public class HttpRequestBodyMiddleware
 
         string body = await reader.ReadToEndAsync();
         logger.LogInformation(
-            $"Request {context.Request?.Method}: {context.Request?.Path} \n{body}");
+            $"Request [Http{context.Request?.Method}] [Path{context.Request?.Path}]\n Body: {body}");
 
         context.Request.Body.Position = 0L;
 
         await next(context);
 
         logger.LogInformation(
-            $"Request finished {context.Request?.Method}: {context.Request?.Path.Value} StatusCode: {context.Response.StatusCode}\n{body}");
+            $"Request [Http{context.Request?.Method}] [Path:{context.Request?.Path}] [StatusCode:{context.Response.StatusCode}]");
     }
 }

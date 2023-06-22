@@ -1,5 +1,6 @@
 using Application;
 using Application.Middleware;
+using Application.Validations;
 using Infrastructure;
 using Serilog;
 
@@ -23,7 +24,10 @@ try
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
 
-    builder.Services.AddControllers();
+    builder.Services.AddControllers(option =>
+    {
+        option.Filters.Add(new ModelValidation());
+    });
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
