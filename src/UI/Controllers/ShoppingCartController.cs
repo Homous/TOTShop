@@ -25,7 +25,6 @@ public class ShoppingCartController : ControllerBase
         {
 
             var shoppingCarts = _shoppingCartServices.GetShoppingCarts();
-            Log.Information("HttpGet with action:Get return: OK");
             return Ok(new ActionResultModel()
             {
                 Message = shoppingCarts != null ? "Shopping carts returned successfully" : "No data exists",
@@ -35,7 +34,7 @@ public class ShoppingCartController : ControllerBase
         }
         catch (Exception ex)
         {
-            Log.Error("HttpGet with action:Get return: BadRequest", ex.ToString());
+            Log.Error(ex.ToString());
             return BadRequest(new ActionResultModel()
             {
                 Message = $"Error ",
@@ -51,7 +50,6 @@ public class ShoppingCartController : ControllerBase
         try
         {
             var shoppingCart = _shoppingCartServices.GetShoppingCart(id);
-            Log.Information("HttpGet with action:GetItem return: OK");
             return Ok(new ActionResultModel()
             {
                 Message = shoppingCart != null ? "Shopping cart returned successfully" : "No data exists",
@@ -61,7 +59,7 @@ public class ShoppingCartController : ControllerBase
         }
         catch (Exception ex)
         {
-            Log.Error("HttpGet with action:GetItem return: BadRequest", ex.ToString());
+            Log.Error(ex.ToString());
             return BadRequest(new ActionResultModel()
             {
                 Message = $"Error",
@@ -79,7 +77,6 @@ public class ShoppingCartController : ControllerBase
             var id = _shoppingCartServices.AddShoppingCart(item);
             if (id == -1)
             {
-                Log.Error("HttpPost with action:Add return: BadRequest");
                 return BadRequest(new ActionResultModel()
                 {
                     Message = $"Data is not valid",
@@ -88,7 +85,6 @@ public class ShoppingCartController : ControllerBase
                 });
             }
 
-            Log.Information("HttpPost with action:Add return: OK");
             return Ok(new ActionResultModel()
             {
                 Message = $"Shopping cart added with Id {id}",
@@ -98,7 +94,7 @@ public class ShoppingCartController : ControllerBase
         }
         catch (Exception ex)
         {
-            Log.Error("HttpPost with action:Add return: BadRequest", ex.ToString());
+            Log.Error(ex.ToString());
             return BadRequest(new ActionResultModel()
             {
                 Message = $"Error ",
@@ -113,9 +109,7 @@ public class ShoppingCartController : ControllerBase
     {
         try
         {
-            Log.Information($"Delete ShoppingCart with id = {id}");
             _shoppingCartServices.DeleteShoppingCart(id);
-            Log.Information("HttpDelete with action:Delete return: OK");
             return Ok(new ActionResultModel()
             {
                 Message = $"Shopping cart deleted with Id {id}",
@@ -125,7 +119,7 @@ public class ShoppingCartController : ControllerBase
         }
         catch (Exception ex)
         {
-            Log.Error("HttpDelete with action:Delete return: BadRequest", ex.ToString());
+            Log.Error(ex.ToString());
             return BadRequest(new ActionResultModel()
             {
                 Message = $"Error ",
@@ -144,7 +138,6 @@ public class ShoppingCartController : ControllerBase
         {
             if (id != cartDto.Id)
             {
-                Log.Information("HttpPut with action:AddShoppingCartItemOnShoppingCart return:BadRequest");
                 return BadRequest("Ids not matching");
             }
             var confirmEditTransaction = _shoppingCartServices.EditShoppingCart(cartDto);
@@ -152,7 +145,6 @@ public class ShoppingCartController : ControllerBase
             if (confirmEditTransaction)
             {
                 var editedCart = _shoppingCartServices.GetShoppingCart(id);
-                Log.Information("HttpPut with action:AddShoppingCartItemOnShoppingCart return:Ok");
                 return Ok(new ActionResultModel()
                 {
                     Message = $"Shopping cart updated with Id {id}",
@@ -160,13 +152,11 @@ public class ShoppingCartController : ControllerBase
                     Data = editedCart
                 });
             }
-
-            Log.Information("HttpPut with action:AddShoppingCartItemOnShoppingCart return:BadRequest");
             return BadRequest(new ActionResultModel() { Data = cartDto, Message = "Data is not valid", Status = false });
         }
         catch (Exception ex)
         {
-            Log.Error("HttpPut with action:AddShoppingCartItemOnShoppingCart return: BadRequest", ex.ToString());
+            Log.Error(ex.ToString());
             return BadRequest(new ActionResultModel()
             {
                 Message = $"Error ",

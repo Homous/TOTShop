@@ -1,4 +1,5 @@
 using Application;
+using Application.Middleware;
 using Infrastructure;
 using Serilog;
 
@@ -37,6 +38,7 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
+    app.UseMiddleware<HttpRequestBodyMiddleware>();
 
     app.UseHttpsRedirection();
 
