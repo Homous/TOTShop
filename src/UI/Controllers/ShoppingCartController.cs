@@ -21,9 +21,6 @@ public class ShoppingCartController : ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        try
-        {
-
             var shoppingCarts = _shoppingCartServices.GetShoppingCarts();
             return Ok(new ActionResultModel()
             {
@@ -31,24 +28,11 @@ public class ShoppingCartController : ControllerBase
                 Status = true,
                 Data = shoppingCarts
             });
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex.ToString());
-            return BadRequest(new ActionResultModel()
-            {
-                Message = $"Error ",
-                Status = false,
-                Data = ""
-            }); ;
-        }
     }
 
     [HttpGet("{id}")]
     public IActionResult GetItemById(int id)
     {
-        try
-        {
             var shoppingCart = _shoppingCartServices.GetShoppingCart(id);
             return Ok(new ActionResultModel()
             {
@@ -56,34 +40,21 @@ public class ShoppingCartController : ControllerBase
                 Status = true,
                 Data = shoppingCart
             });
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex.ToString());
-            return BadRequest(new ActionResultModel()
-            {
-                Message = $"Error",
-                Status = false,
-                Data = ""
-            });
-        }
     }
 
     [HttpPost]
     public IActionResult Add([FromBody] ShoppingCartDto item)
     {
-        try
+        var id = _shoppingCartServices.AddShoppingCart(item);
+        if (id == -1)
         {
-            var id = _shoppingCartServices.AddShoppingCart(item);
-            if (id == -1)
+            return BadRequest(new ActionResultModel()
             {
-                return BadRequest(new ActionResultModel()
-                {
-                    Message = $"Data is not valid",
-                    Status = false,
-                    Data = ""
-                });
-            }
+                Message = $"Data is not valid",
+                Status = false,
+                Data = ""
+            });
+        }
 
             return Ok(new ActionResultModel()
             {
@@ -92,23 +63,9 @@ public class ShoppingCartController : ControllerBase
                 Data = id
             });
         }
-        catch (Exception ex)
-        {
-            Log.Error(ex.ToString());
-            return BadRequest(new ActionResultModel()
-            {
-                Message = $"Error ",
-                Status = false,
-                Data = ""
-            });
-        }
-    }
-
     [HttpDelete("{id}")]
     public ActionResult Delete(int id)
     {
-        try
-        {
             _shoppingCartServices.DeleteShoppingCart(id);
             return Ok(new ActionResultModel()
             {
@@ -116,17 +73,6 @@ public class ShoppingCartController : ControllerBase
                 Status = true,
                 Data = ""
             });
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex.ToString());
-            return BadRequest(new ActionResultModel()
-            {
-                Message = $"Error ",
-                Status = false,
-                Data = new Object()
-            });
-        }
 
     }
 
@@ -134,8 +80,6 @@ public class ShoppingCartController : ControllerBase
     [HttpPut("{id}")]
     public ActionResult AddShoppingCartItemOnShoppingCart(int id, [FromBody] DetailedShoppingCartDto cartDto)
     {
-        try
-        {
             if (id != cartDto.Id)
             {
                 return BadRequest("Ids not matching");
@@ -153,16 +97,5 @@ public class ShoppingCartController : ControllerBase
                 });
             }
             return BadRequest(new ActionResultModel() { Data = cartDto, Message = "Data is not valid", Status = false });
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex.ToString());
-            return BadRequest(new ActionResultModel()
-            {
-                Message = $"Error ",
-                Status = false,
-                Data = cartDto
-            });
-        }
     }
 }
