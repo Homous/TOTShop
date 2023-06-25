@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Application.Wrappers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -23,12 +26,23 @@ public class HttpRequestBodyMiddleware
     public async Task Invoke(HttpContext context)
     {
         context.Request.EnableBuffering();
-
         var reader = new StreamReader(context.Request.Body);
+        var builder = new StringBuilder(Environment.NewLine);
+        var routes = new StringBuilder(Environment.NewLine);
+        foreach (var header in context.Request.Headers)
+        { 
+            builder.AppendLine($"{header.Key}:{header.Value}");
+        }
+
+        foreach (var route in context.Request.Query)
+        {
+            routes.AppendLine($"{route.Key}:{route.Value}  ");
+        }
+        
 
         string body = await reader.ReadToEndAsync();
         logger.LogInformation(
-            $"Request [Http{context.Request?.Method}] [Path{context.Request?.Path}]\n Body: {body}");
+            $"Request [Http{context.Request?.Method}] [Path:{context.Request?.Path}] \nRoute: {routes} \nHeaders: {builder} \n Body: {body}");
 
         context.Request.Body.Position = 0L;
 
