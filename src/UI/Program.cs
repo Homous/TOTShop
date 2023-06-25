@@ -1,4 +1,5 @@
 using Application;
+using Application.Filters;
 using Application.Middleware;
 using Application.Validations;
 using Infrastructure;
@@ -27,6 +28,7 @@ try
     builder.Services.AddControllers(option =>
     {
         option.Filters.Add<ModelValidation>();
+        option.Filters.Add<UnhandledExceptionFilterAttribute>();
     });
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
