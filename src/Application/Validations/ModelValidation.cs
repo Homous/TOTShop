@@ -14,7 +14,7 @@ public class ModelValidation : IActionFilter
             if (!context.ModelState.IsValid)
             {
                 Log.Warning("Model is not valid");
-                context.Result = new UnprocessableEntityObjectResult(context.ModelState);
+                context.Result = new BadRequestObjectResult(context.ModelState);
             }
             Log.Information("Model is valid");
         }

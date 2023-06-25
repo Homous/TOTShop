@@ -26,7 +26,7 @@ try
 
     builder.Services.AddControllers(option =>
     {
-        option.Filters.Add(new ModelValidation());
+        option.Filters.Add<ModelValidation>();
     });
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

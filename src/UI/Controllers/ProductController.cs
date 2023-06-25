@@ -110,7 +110,6 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost]
-    [ServiceFilter(typeof(ModelValidation))]
     public IActionResult AddProduct([FromBody] AddProductDto addProduct)
     {
         try
@@ -133,7 +132,6 @@ public class ProductController : ControllerBase
     }
 
     [HttpPut]
-    [ServiceFilter(typeof(ModelValidation))]
     public IActionResult UpdateProduct(UpdateProductDto updateProductDto)
     {
         try
