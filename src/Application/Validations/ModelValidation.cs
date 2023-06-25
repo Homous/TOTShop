@@ -7,24 +7,25 @@ namespace Application.Validations;
 
 public class ModelValidation : IActionFilter
 {
-    public void OnActionExecuted(ActionExecutedContext context)
+    public void OnActionExecuting(ActionExecutingContext context)
     {
         try
         {
             if (!context.ModelState.IsValid)
             {
-                Log.Information("Model is valid");
+                Log.Warning("Model is not valid");
                 context.Result = new UnprocessableEntityObjectResult(context.ModelState);
             }
+            Log.Information("Model is valid");
         }
         catch (Exception ex)
         {
-            Log.Error(ex,"Model is not valid");
+            Log.Error(ex, "Error");
         }
-
     }
-
-    public void OnActionExecuting(ActionExecutingContext context)
+    public void OnActionExecuted(ActionExecutedContext context)
     {
     }
+
+   
 }
