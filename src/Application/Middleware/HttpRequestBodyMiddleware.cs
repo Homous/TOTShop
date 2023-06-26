@@ -23,9 +23,10 @@ public class HttpRequestBodyMiddleware
         try
         {
             context.Request.EnableBuffering();
+            var query = context.Request.Query;
             var reader = new StreamReader(context.Request.Body);
             var builder = new StringBuilder(Environment.NewLine);
-            var routes = new StringBuilder(Environment.NewLine);
+            var routes = new StringBuilder();
             foreach (var header in context.Request.Headers)
             {
                 builder.AppendLine($"{header.Key}:{header.Value}");
@@ -33,13 +34,13 @@ public class HttpRequestBodyMiddleware
 
             foreach (var route in context.Request.Query)
             {
-                routes.AppendLine($"{route.Key}:{route.Value}  ");
+                routes.Append($"{route.Key}:{route.Value} ");
             }
 
 
             string body = await reader.ReadToEndAsync();
             logger.LogInformation(
-                $"Request [Http{context.Request?.Method}] [Path:{context.Request?.Path}] \nRoute: {routes} \nHeaders: {builder} \n Body: {body}");
+                $"Request [Http{context.Request?.Method}] [Path:{context.Request?.Path}] [Parameters: {routes}] \nHeaders: {builder} \n Body: {body}\n");
 
             context.Request.Body.Position = 0L;
 
