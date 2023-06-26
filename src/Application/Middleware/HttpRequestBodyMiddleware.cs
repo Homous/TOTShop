@@ -1,13 +1,8 @@
 ﻿using Application.Wrappers;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Middleware;
 
@@ -25,30 +20,42 @@ public class HttpRequestBodyMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-        context.Request.EnableBuffering();
-        var reader = new StreamReader(context.Request.Body);
-        var builder = new StringBuilder(Environment.NewLine);
-        var routes = new StringBuilder(Environment.NewLine);
-        foreach (var header in context.Request.Headers)
-        { 
-            builder.AppendLine($"{header.Key}:{header.Value}");
-        }
-
-        foreach (var route in context.Request.Query)
+        try
         {
-            routes.AppendLine($"{route.Key}:{route.Value}  ");
+            context.Request.EnableBuffering();
+            var reader = new StreamReader(context.Request.Body);
+            var builder = new StringBuilder(Environment.NewLine);
+            var routes = new StringBuilder(Environment.NewLine);
+            foreach (var header in context.Request.Headers)
+            {
+                builder.AppendLine($"{header.Key}:{header.Value}");
+            }
+
+            foreach (var route in context.Request.Query)
+            {
+                routes.AppendLine($"{route.Key}:{route.Value}  ");
+            }
+
+
+            string body = await reader.ReadToEndAsync();
+            logger.LogInformation(
+                $"Request [Http{context.Request?.Method}] [Path:{context.Request?.Path}] \nRoute: {routes} \nHeaders: {builder} \n Body: {body}");
+
+            context.Request.Body.Position = 0L;
+
+            await next(context);
+
+            logger.LogInformation(
+                $"Request [Http{context.Request?.Method}] [Path:{context.Request?.Path}] [StatusCode:{context.Response.StatusCode}]");
         }
-        
+        catch (Exception ex)
+        {
+            logger.LogError(ex.ToString());
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            var result = new ResultModel() { Message = $"{ex.Message}", Data = "", Status = false };
 
-        string body = await reader.ReadToEndAsync();
-        logger.LogInformation(
-            $"Request [Http{context.Request?.Method}] [Path:{context.Request?.Path}] \nRoute: {routes} \nHeaders: {builder} \n Body: {body}");
+            await context.Response.WriteAsJsonAsync(result);
+        }
 
-        context.Request.Body.Position = 0L;
-
-        await next(context);
-
-        logger.LogInformation(
-            $"Request [Http{context.Request?.Method}] [Path:{context.Request?.Path}] [StatusCode:{context.Response.StatusCode}]");
     }
 }
